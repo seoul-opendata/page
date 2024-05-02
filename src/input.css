@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.map_marker {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: deepskyblue;
+    border: 2px solid white;
+    display: block;
+}
