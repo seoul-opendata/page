@@ -126,23 +126,10 @@ function initMap() {
       center: new naver.maps.LatLng(37.5665, 126.978), // 서울시청
     });
   }
-
-  $.ajax({
-    url: HOME_PATH +'/js/seoul.json',
-    dataType: 'json',
-  }).done(async function(geojson) {
-    console.log('Successfully loaded geojson data');
-    await startDataLayer(geojson);
-  }).fail(function(jqXHR, textStatus, errorThrown) {
-    console.error(`Failed to load geojson data: ${textStatus}, ${errorThrown}`);
-  });
 }
 
 document.querySelector('#flood-risk-button').addEventListener('click', async function(e) {
   e.preventDefault();
-
-  // 맵 초기화
-  initMap();
 
   // 폴리곤 보이기
   loadGeoJson();
@@ -172,9 +159,6 @@ async function showShelters(map, urls) {
 }
 document.querySelector('#shelter-button').addEventListener('click', async function(e) {
   e.preventDefault();
-
-  // 맵 초기화
-  initMap();
 
   // 대피소 마커 생성
   const urls = [
