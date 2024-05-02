@@ -1,4 +1,4 @@
-var map;
+let map;
 var mapData;
 var proj4 = window.proj4;
 var HOME_PATH = 'https://seoulshelter.info';
@@ -75,10 +75,24 @@ map.data.addListener('mouseover', function(e) {
 }
 
 function loadScript() {
-    var script = document.createElement('script');
-    script.src = "https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=4qd9nt8f83";
-    script.onload = initMap; // 스크립트가 완전히 로드된 후에 initMap 함수를 호출합니다.
-    document.body.appendChild(script);
+  var script = document.createElement('script');
+  script.src = "https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=4qd9nt8f83";
+  script.onload = function() {
+      initMap();
+      loadGeoJson();
+  }; 
+  document.body.appendChild(script);
+}
+function loadGeoJson() {
+  $.ajax({
+    url: HOME_PATH +'/js/seoul.json',
+    dataType: 'json',
+  }).done(async function(geojson) {
+    console.log('Successfully loaded geojson data');
+    await startDataLayer(geojson);
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+    console.error(`Failed to load geojson data: ${textStatus}, ${errorThrown}`);
+  });
 }
 
 window.onload = loadScript; // 페이지가 완전히 로드된 후에 loadScript 함수를 호출합니다.
@@ -104,40 +118,36 @@ function handleMouseOut(e) {
   });
 }
 function initMap() {
-  map = new naver.maps.Map(document.getElementById("map"), {
-    zoom: 12,
-    mapTypeId: "normal",
-    center: new naver.maps.LatLng(37.5665, 126.978), // 서울시청
-  });
+  // 맵이 이미 초기화되었는지 확인
+  if (!map) {
+    map = new naver.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      mapTypeId: "normal",
+      center: new naver.maps.LatLng(37.5665, 126.978), // 서울시청
+    });
+  }
 
-$.ajax({
-  url: HOME_PATH +'/js/seoul.json',
-  dataType: 'json',
-}).done(async function(geojson) {
-  console.log('Successfully loaded geojson data');
-  await startDataLayer(geojson);
-}).fail(function(jqXHR, textStatus, errorThrown) {
-  console.error(`Failed to load geojson data: ${textStatus}, ${errorThrown}`);
-});
+  $.ajax({
+    url: HOME_PATH +'/js/seoul.json',
+    dataType: 'json',
+  }).done(async function(geojson) {
+    console.log('Successfully loaded geojson data');
+    await startDataLayer(geojson);
+  }).fail(function(jqXHR, textStatus, errorThrown) {
+    console.error(`Failed to load geojson data: ${textStatus}, ${errorThrown}`);
+  });
 }
+
 document.querySelector('#flood-risk-button').addEventListener('click', async function(e) {
   e.preventDefault();
 
   // 맵 초기화
-  map = new naver.maps.Map(document.getElementById("map"), {
-    zoom: 12,
-    mapTypeId: "normal",
-    center: new naver.maps.LatLng(37.5665, 126.978), // 서울시청
-  });
+  initMap();
 
   // 폴리곤 보이기
-  $.ajax({
-    url: HOME_PATH +'/js/seoul.json',
-    dataType: 'json',
-  }).then(async function(geojson) {
-    await startDataLayer(geojson);
-  });
+  loadGeoJson();
 });
+
 async function showShelters(map, urls) {
   const coordinatesPromises = urls.map(url => getCoordinates(url));
   const coordinatesArrays = await Promise.all(coordinatesPromises);
@@ -164,11 +174,7 @@ document.querySelector('#shelter-button').addEventListener('click', async functi
   e.preventDefault();
 
   // 맵 초기화
-  map = new naver.maps.Map(document.getElementById("map"), {
-    zoom: 12,
-    mapTypeId: "normal",
-    center: new naver.maps.LatLng(37.5665, 126.978), // 서울시청
-  });
+  initMap();
 
   // 대피소 마커 생성
   const urls = [
