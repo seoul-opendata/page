@@ -117,6 +117,7 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
   });
 })
 async function showShelters(map, urls) {
+  const HOME_PATH = '/images'; // 이미지 경로를 설정합니다.
   const coordinatesPromises = urls.map(url => getCoordinates(url));
   const coordinatesArrays = await Promise.all(coordinatesPromises);
   const coordinates = coordinatesArrays.flat();
@@ -135,6 +136,32 @@ async function showShelters(map, urls) {
     });
   });
 
+  // 클러스터 마커 아이콘을 정의합니다.
+  const htmlMarker1 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    size: new naver.maps.Size(40, 40),
+    anchor: new naver.maps.Point(20, 20)
+  };
+  const htmlMarker2 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    size: new naver.maps.Size(40, 40),
+    anchor: new naver.maps.Point(20, 20)
+  };
+  const htmlMarker3 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    size: new naver.maps.Size(40, 40),
+    anchor: new naver.maps.Point(20, 20)
+  };
+  const htmlMarker4 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    size: new naver.maps.Size(40, 40),
+    anchor: new naver.maps.Point(20, 20)
+  };
+  const htmlMarker5 = {
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    size: new naver.maps.Size(40, 40),
+    anchor: new naver.maps.Point(20, 20)
+  };
   const markerClustering = new MarkerClustering({
     minClusterSize: 2,
     maxZoom: 8,
