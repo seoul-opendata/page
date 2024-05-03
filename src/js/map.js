@@ -38,9 +38,6 @@ async function fetchRainfallData() {
   });
 
   await Promise.all(requests);
-  districts.forEach((district, index) => {
-    rainfallData[district] = (index + 1) * 2; // 각 구의 강수량을 2, 4, 6, ..., 50으로 설정합니다.
-  });
 
   return rainfallData;
 }
@@ -173,11 +170,8 @@ async function startDataLayer(geojson) {
     if (!isShelterButtonClicked) {
       // 폴리곤을 배열에 추가
       geojson.features.forEach(function(feature) {
-        console.log(feature.properties);
-        const district = feature.properties.nm; // 'SIG_KOR_NM' 대신 'nm'을 사용합니다.
+        const district = feature.properties.nm; 
         const rainfall = rainfallData[district] ? parseFloat(rainfallData[district]) : 0;
-        console.log(`district: ${district}, rainfall: ${rainfall}`);
-      
         var color;
         if (rainfall === 0) {
           color = '#FFFFFF'; // 흰색
