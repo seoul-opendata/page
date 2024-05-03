@@ -32,17 +32,20 @@ async function fetchRainfallData() {
           const latestReceiveTime = latest ? latest.querySelector('RECEIVE_TIME').textContent : null;
           return new Date(currentReceiveTime) > new Date(latestReceiveTime) ? current : latest;
       }, null);
-      rainfallData[district] = latestData.querySelector('RF').textContent; // 강수량을 할당
+      if (latestData) {
+        rainfallData[district] = latestData.querySelector('RAINFALL10').textContent; // 강수량을 할당
+      }
   });
 
   await Promise.all(requests);
 
   return rainfallData;
 }
+
 function updateMapStyle(rainfallData) {
   polygons.forEach(function(polygon) {
     const district = polygon.getOptions().district;
-    const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
+    const rainfall = rainfallData[district] ? Number(rainfallData[district]) : 0; // 수정된 부분
     var color;
     if (rainfall === 0) {
       color = '#FFFFFF'; // 흰색
@@ -135,31 +138,31 @@ async function initMap() {
       await loadGeoJson();
       await fetchRainfallData();
       rainfallData = { 
-        '강남구': { textContent: '0' },
-        '강동구': { textContent: '0.5' },
-        '강북구': { textContent: '1' },
-        '강서구': { textContent: '1.5' },
-        '관악구': { textContent: '2' },
-        '광진구': { textContent: '3' },
-        '구로구': { textContent: '4' },
-        '금천구': { textContent: '4.5' },
-        '노원구': { textContent: '5' },
-        '도봉구': { textContent: '6' },
-        '동대문구': { textContent: '6.5' },
-        '동작구': { textContent: '7' },
-        '마포구': { textContent: '8' },
-        '서대문구': { textContent: '9' },
-        '서초구': { textContent: '10' },
-        '성동구': { textContent: '11' },
-        '성북구': { textContent: '12' },
-        '송파구': { textContent: '13' },
-        '양천구': { textContent: '14' },
-        '영등포구': { textContent: '15' },
-        '용산구': { textContent: '16' },
-        '은평구': { textContent: '17' },
-        '종로구': { textContent: '18' },
-        '중구': { textContent: '19' },
-        '중랑구': { textContent: '20' },
+        '강남구': 0,
+        '강동구': 0.5,
+        '강북구': 1,
+        '강서구': 1.5,
+        '관악구': 2,
+        '광진구': 3,
+        '구로구': 4,
+        '금천구': 4.5,
+        '노원구': 5,
+        '도봉구': 6,
+        '동대문구': 6.5,
+        '동작구': 7,
+        '마포구': 8,
+        '서대문구': 9,
+        '서초구': 10,
+        '성동구': 11,
+        '성북구': 12,
+        '송파구': 13,
+        '양천구': 14,
+        '영등포구': 15,
+        '용산구': 16,
+        '은평구': 17,
+        '종로구': 18,
+        '중구': 19,
+        '중랑구': 20,
       };
       updateMapStyle(rainfallData);
     }, async function(error) {
@@ -177,31 +180,31 @@ async function initMap() {
       await loadGeoJson();
       await fetchRainfallData();
       rainfallData = { 
-        '강남구': { textContent: '0' },
-        '강동구': { textContent: '0.5' },
-        '강북구': { textContent: '1' },
-        '강서구': { textContent: '1.5' },
-        '관악구': { textContent: '2' },
-        '광진구': { textContent: '3' },
-        '구로구': { textContent: '4' },
-        '금천구': { textContent: '4.5' },
-        '노원구': { textContent: '5' },
-        '도봉구': { textContent: '6' },
-        '동대문구': { textContent: '6.5' },
-        '동작구': { textContent: '7' },
-        '마포구': { textContent: '8' },
-        '서대문구': { textContent: '9' },
-        '서초구': { textContent: '10' },
-        '성동구': { textContent: '11' },
-        '성북구': { textContent: '12' },
-        '송파구': { textContent: '13' },
-        '양천구': { textContent: '14' },
-        '영등포구': { textContent: '15' },
-        '용산구': { textContent: '16' },
-        '은평구': { textContent: '17' },
-        '종로구': { textContent: '18' },
-        '중구': { textContent: '19' },
-        '중랑구': { textContent: '20' },
+        '강남구': 0,
+        '강동구': 0.5,
+        '강북구': 1,
+        '강서구': 1.5,
+        '관악구': 2,
+        '광진구': 3,
+        '구로구': 4,
+        '금천구': 4.5,
+        '노원구': 5,
+        '도봉구': 6,
+        '동대문구': 6.5,
+        '동작구': 7,
+        '마포구': 8,
+        '서대문구': 9,
+        '서초구': 10,
+        '성동구': 11,
+        '성북구': 12,
+        '송파구': 13,
+        '양천구': 14,
+        '영등포구': 15,
+        '용산구': 16,
+        '은평구': 17,
+        '종로구': 18,
+        '중구': 19,
+        '중랑구': 20,
       };
       updateMapStyle(rainfallData);
     });
