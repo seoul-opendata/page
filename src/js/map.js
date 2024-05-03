@@ -4,6 +4,7 @@ var proj4 = window.proj4;
 var HOME_PATH = 'https://seoulshelter.info';
 let markers = [];
 let polygons = []; 
+let rainfallData = {}; // 전역 변수로 선언
 var isShelterButtonClicked = false; 
 // 좌표 변환을 위한 proj4 정의
 proj4.defs([
@@ -11,99 +12,35 @@ proj4.defs([
   ['EPSG:4326', '+proj=longlat +datum=WGS84 +no_defs']
 ]);
 async function fetchRainfallData() {
-  // const districts = ['강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'];
+  const districts = ['강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'];
 
-  // const requests = districts.map(async district => {
-  //     const encodedDistrict = encodeURIComponent(district);
-  //     const apiUrl = `http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/ListRainfallService/1/5/${encodedDistrict}`;
-  //     const proxyUrl = `https://proxy.seoulshelter.info/${apiUrl}`;
-  //     const response = await fetch(proxyUrl);
-  //     const text = await response.text();
-  //     const parser = new DOMParser();
-  //     const xmlDoc = parser.parseFromString(text, "text/xml");
-  //     const rows = Array.from(xmlDoc.querySelectorAll('row'));
-  //     if (rows.length === 0) {
-  //         console.error(`No data for ${district}`);
-  //         return;
-  //     }
-  //     const latestData = rows.reduce((latest, current) => {
-  //         const currentReceiveTime = current.querySelector('RECEIVE_TIME').textContent;
-  //         const latestReceiveTime = latest ? latest.querySelector('RECEIVE_TIME').textContent : null;
-  //         return new Date(currentReceiveTime) > new Date(latestReceiveTime) ? current : latest;
-  //     }, null);
-  //     if (latestData) {
-  //       rainfallData[district] = latestData.querySelector('RAINFALL10').textContent; // 강수량을 할당
-  //     }
-  // });
+  const requests = districts.map(async district => {
+      const encodedDistrict = encodeURIComponent(district);
+      const apiUrl = `http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/ListRainfallService/1/5/${encodedDistrict}`;
+      const proxyUrl = `https://proxy.seoulshelter.info/${apiUrl}`;
+      const response = await fetch(proxyUrl);
+      const text = await response.text();
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(text, "text/xml");
+      const rows = Array.from(xmlDoc.querySelectorAll('row'));
+      if (rows.length === 0) {
+          console.error(`No data for ${district}`);
+          return;
+      }
+      const latestData = rows.reduce((latest, current) => {
+          const currentReceiveTime = current.querySelector('RECEIVE_TIME').textContent;
+          const latestReceiveTime = latest ? latest.querySelector('RECEIVE_TIME').textContent : null;
+          return new Date(currentReceiveTime) > new Date(latestReceiveTime) ? current : latest;
+      }, null);
+      if (latestData) {
+        rainfallData[district] = latestData.querySelector('RAINFALL10').textContent; // 강수량을 할당
+      }
+  });
 
-  // await Promise.all(requests);
-
-  rainfallData = { 
-    '강남구': 0,
-    '강동구': 0.5,
-    '강북구': 1,
-    '강서구': 1.5,
-    '관악구': 2,
-    '광진구': 3,
-    '구로구': 4,
-    '금천구': 4.5,
-    '노원구': 5,
-    '도봉구': 6,
-    '동대문구': 6.5,
-    '동작구': 7,
-    '마포구': 8,
-    '서대문구': 9,
-    '서초구': 10,
-    '성동구': 11,
-    '성북구': 12,
-    '송파구': 13,
-    '양천구': 14,
-    '영등포구': 15,
-    '용산구': 16,
-    '은평구': 17,
-    '종로구': 18,
-    '중구': 19,
-    '중랑구': 20,
-  };
+  await Promise.all(requests);
 
   return rainfallData;
 }
-
-function updateMapStyle(rainfallData) {
-  polygons.forEach(function(polygon) {
-    const district = polygon.getOptions().district;
-    const rainfall = rainfallData[district] ? Number(rainfallData[district]) : 0; // 수정된 부분
-    var color;
-    if (rainfall === 0) {
-      color = '#FFFFFF'; // 흰색
-    } else if (rainfall <= 0.5) {
-      color = '#00BE00'; // 초록색
-    } else if (rainfall <= 1.5) {
-      color = '#FFDC1F'; // 노란색
-    } else if (rainfall <= 3) {
-      color = '#FF6600'; // 주황색
-    } else if (rainfall <= 4.5) {
-      color = '#D20000'; // 붉은색
-    } else if (rainfall <= 6.5) {
-      color = '#E0A9FF'; // 연보라
-    } else if (rainfall <= 8) {
-      color = '#B329FF'; // 보라
-    } else if (rainfall <= 11.5) {
-      color = '#9300E4'; // 진보라
-    } else {
-      color = '#000390'; // 푸른색
-    }
-
-    polygon.setOptions({
-      fillColor: color,
-      fillOpacity: isShelterButtonClicked ? 0 : (polygon.getOptions().focus || rainfall > 0 ? 0.6 : 0.6),
-      strokeColor: color,
-      strokeWeight: polygon.getOptions().focus || rainfall > 0 ? 4 : 2,
-      strokeOpacity: isShelterButtonClicked ? 0 : 1
-    });
-  });
-}
-
 function loadScript() {
   var script = document.createElement('script');
   script.src = "https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=4qd9nt8f83";
@@ -125,27 +62,6 @@ function loadGeoJson() {
     console.error(`Failed to load geojson data: ${textStatus}, ${errorThrown}`);
   });
 }
-
-function handleMouseOver(e) {
-  map.data.overrideStyle(e.feature, {
-    fillOpacity : 0.6,
-    fillColor: '#0f0',
-    strokeColor: '#0f0',
-    strokeWeight: 2,
-    strokeOpacity: 1
-  });
-}
-
-function handleMouseOut(e) {
-  var feature = e.feature;
-  map.data.overrideStyle(feature, {
-      fillOpacity: 0.0001,
-      fillColor: '#ffffff',
-      strokeColor: '#ffffff',
-      strokeWeight: 2,
-      strokeOpacity: 1
-  });
-}
 async function initMap() {
   if (!map) {
     // 사용자의 위치 정보를 얻습니다.
@@ -161,10 +77,11 @@ async function initMap() {
         center: new naver.maps.LatLng(lat, lng),
       });
 
-      // 지도가 생성된 후에 폴리곤을 로드합니다.
+      // 강수량 데이터를 불러옵니다.
+      rainfallData = await fetchRainfallData();
+
+      // 강수량 데이터가 불러와진 후에 폴리곤을 로드합니다.
       await loadGeoJson();
-      await fetchRainfallData();
-      updateMapStyle(rainfallData);
     }, async function(error) {
       // 사용자가 위치 정보를 제공하지 않았거나, 다른 오류가 발생한 경우
       console.error(`Failed to get user's location: ${error}`);
@@ -176,10 +93,11 @@ async function initMap() {
         center: new naver.maps.LatLng(37.5665, 126.978),
       });
 
-      // 지도가 생성된 후에 폴리곤을 로드합니다.
+      // 강수량 데이터를 불러옵니다.
+      rainfallData = await fetchRainfallData();
+
+      // 강수량 데이터가 불러와진 후에 폴리곤을 로드합니다.
       await loadGeoJson();
-      await fetchRainfallData();
-      updateMapStyle(rainfallData);
     });
   }
 }
@@ -240,9 +158,6 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
     showShelters(map, urls);
   });
 })
-
-let rainfallData = {};
-
 async function startDataLayer(geojson) {
   try {
     // 좌표 변환
@@ -257,13 +172,36 @@ async function startDataLayer(geojson) {
     if (!isShelterButtonClicked) {
       // 폴리곤을 배열에 추가
       geojson.features.forEach(function(feature) {
+        const district = feature.properties.SIG_KOR_NM;
+        const rainfall = rainfallData[district] ? parseFloat(rainfallData[district]) : 0;
+        var color;
+        if (rainfall === 0) {
+          color = '#FFFFFF'; // 흰색
+        } else if (rainfall <= 0.5) {
+          color = '#00BE00'; // 초록색
+        } else if (rainfall <= 1.5) {
+          color = '#FFDC1F'; // 노란색
+        } else if (rainfall <= 3) {
+          color = '#FF6600'; // 주황색
+        } else if (rainfall <= 4.5) {
+          color = '#D20000'; // 붉은색
+        } else if (rainfall <= 6.5) {
+          color = '#E0A9FF'; // 연보라
+        } else if (rainfall <= 8) {
+          color = '#B329FF'; // 보라
+        } else if (rainfall <= 11.5) {
+          color = '#9300E4'; // 진보라
+        } else {
+          color = '#000390'; // 푸른색
+        }
+
         // 폴리곤 생성
         var polygon = new naver.maps.Polygon({
           map: map,
           paths: feature.geometry.coordinates,
-          fillColor: '#ff0000',
+          fillColor: color,
           fillOpacity: 0.3,
-          strokeColor: '#ff0000',
+          strokeColor: color,
           strokeOpacity: 0.6,
           strokeWeight: 2,
           id: feature.properties.district, 
@@ -272,14 +210,8 @@ async function startDataLayer(geojson) {
 
         // 이벤트 리스너 추가
         naver.maps.Event.addListener(polygon, 'mouseover', function(e) {
-          const district = polygon.getOptions().district;
-          const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
-          var color = rainfall > 0 ? 'blue' : 'green';
-
           polygon.setOptions({
             fillOpacity : 0.6,
-            fillColor: color,
-            strokeColor: color,
             strokeWeight: 2,
             strokeOpacity: 1
           });
@@ -288,8 +220,6 @@ async function startDataLayer(geojson) {
         naver.maps.Event.addListener(polygon, 'mouseout', function(e) {
           polygon.setOptions({
             fillOpacity: 0.3,
-            fillColor: '#ff0000',
-            strokeColor: '#ff0000',
             strokeWeight: 2,
             strokeOpacity: 0.6
           });
@@ -297,8 +227,6 @@ async function startDataLayer(geojson) {
 
         polygons.push(polygon);
       });
-
-      updateMapStyle(rainfallData); // 폴리곤이 생성된 후에 updateMapStyle 함수 호출
     }
   } catch (error) {
     console.error(`Failed to start data layer: ${error}`);
