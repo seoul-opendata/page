@@ -5,7 +5,7 @@ var HOME_PATH = 'https://seoulshelter.info';
 let markers = [];
 let polygons = []; 
 var isShelterButtonClicked = false; 
-let rainfallData = {}; // 전역 변수로 선언
+var rainfallData = {}; // 전역 변수로 선언
 // 좌표 변환을 위한 proj4 정의
 proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
@@ -14,7 +14,6 @@ proj4.defs([
 
 async function fetchRainfallData() {
   const districts = ['강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'];
-  const rainfallData = {};
 
   const requests = districts.map(async district => {
       const encodedDistrict = encodeURIComponent(district);
@@ -34,7 +33,7 @@ async function fetchRainfallData() {
           const latestReceiveTime = latest ? latest.querySelector('RECEIVE_TIME').textContent : null;
           return new Date(currentReceiveTime) > new Date(latestReceiveTime) ? current : latest;
       }, null);
-      rainfallData[district] = latestData
+      rainfallData[district] = latestData; // 전역 변수 rainfallData 사용
   });
 
   await Promise.all(requests);
