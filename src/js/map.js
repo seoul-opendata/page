@@ -45,7 +45,53 @@ function updateMapStyle(rainfallData) {
   polygons.forEach(function(polygon) {
     const district = polygon.getOptions().district;
     const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
-    var color = rainfall > 0 ? 'skyblue' : '#ffffff';  
+    var color;
+    const rainfallData = {
+      '강남구': { textContent: '0' },
+      '강동구': { textContent: '0.5' },
+      '강북구': { textContent: '1' },
+      '강서구': { textContent: '1.5' },
+      '관악구': { textContent: '2' },
+      '광진구': { textContent: '3' },
+      '구로구': { textContent: '4' },
+      '금천구': { textContent: '4.5' },
+      '노원구': { textContent: '5' },
+      '도봉구': { textContent: '6' },
+      '동대문구': { textContent: '6.5' },
+      '동작구': { textContent: '7' },
+      '마포구': { textContent: '8' },
+      '서대문구': { textContent: '9' },
+      '서초구': { textContent: '10' },
+      '성동구': { textContent: '11' },
+      '성북구': { textContent: '12' },
+      '송파구': { textContent: '13' },
+      '양천구': { textContent: '14' },
+      '영등포구': { textContent: '15' },
+      '용산구': { textContent: '16' },
+      '은평구': { textContent: '17' },
+      '종로구': { textContent: '18' },
+      '중구': { textContent: '19' },
+      '중랑구': { textContent: '20' },
+    };
+    if (rainfall === 0) {
+      color = '#FFFFFF'; // 흰색
+    } else if (rainfall <= 0.5) {
+      color = '#00BE00'; // 초록색
+    } else if (rainfall <= 1.5) {
+      color = '#FFDC1F'; // 노란색
+    } else if (rainfall <= 3) {
+      color = '#FF6600'; // 주황색
+    } else if (rainfall <= 4.5) {
+      color = '#D20000'; // 붉은색
+    } else if (rainfall <= 6.5) {
+      color = '#E0A9FF'; // 연보라
+    } else if (rainfall <= 8) {
+      color = '#B329FF'; // 보라
+    } else if (rainfall <= 11.5) {
+      color = '#9300E4'; // 진보라
+    } else {
+      color = '#000390'; // 푸른색
+    }
 
     polygon.setOptions({
       fillColor: color,
@@ -194,7 +240,6 @@ async function startDataLayer(geojson) {
         return transformed;
       });
     });
-
     // '대피소' 버튼이 눌리지 않았을 때만 폴리곤 생성
     if (!isShelterButtonClicked) {
       // 폴리곤을 배열에 추가
