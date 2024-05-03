@@ -3,6 +3,7 @@ var mapData;
 var proj4 = window.proj4;
 var HOME_PATH = 'https://seoulshelter.info';
 let markers = [];
+let polygons = []; // 폴리곤을 저장할 배열
 var isShelterButtonClicked = false; 
 
 // 좌표 변환을 위한 proj4 정의
@@ -131,6 +132,13 @@ function initMap() {
 document.querySelector('#flood-risk-button').addEventListener('click', async function(e) {
   e.preventDefault();
 
+  // 맵 파기
+  map.destroy();
+  map = null;
+
+  // 맵 초기화
+  initMap();
+
   // 폴리곤 보이기
   loadGeoJson();
 });
@@ -160,6 +168,13 @@ async function showShelters(map, urls) {
 document.querySelector('#shelter-button').addEventListener('click', async function(e) {
   e.preventDefault();
 
+  // 맵 파기
+  map.destroy();
+  map = null;
+
+  // 맵 초기화
+  initMap();
+
   // 대피소 마커 생성
   const urls = [
     'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1/1000',
@@ -167,7 +182,6 @@ document.querySelector('#shelter-button').addEventListener('click', async functi
   ];
   showShelters(map, urls);
 });
-
 
 async function startDataLayer(geojson) {
   try {
@@ -182,6 +196,11 @@ async function startDataLayer(geojson) {
     // '대피소' 버튼이 눌리지 않았을 때만 폴리곤 생성
     if (!isShelterButtonClicked) {
       map.data.addGeoJson(geojson);
+
+      // 폴리곤을 배열에 추가
+      map.data.forEach(function(feature) {
+        polygons.push(feature);
+      });
 
       map.data.addListener('click', function(e) {
         var feature = e.feature;
