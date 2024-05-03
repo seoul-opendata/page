@@ -47,33 +47,6 @@ function updateMapStyle(rainfallData) {
     const district = polygon.getOptions().district;
     const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
     var color;
-    const rainfallData = {
-      '강남구': { textContent: '0' },
-      '강동구': { textContent: '0.5' },
-      '강북구': { textContent: '1' },
-      '강서구': { textContent: '1.5' },
-      '관악구': { textContent: '2' },
-      '광진구': { textContent: '3' },
-      '구로구': { textContent: '4' },
-      '금천구': { textContent: '4.5' },
-      '노원구': { textContent: '5' },
-      '도봉구': { textContent: '6' },
-      '동대문구': { textContent: '6.5' },
-      '동작구': { textContent: '7' },
-      '마포구': { textContent: '8' },
-      '서대문구': { textContent: '9' },
-      '서초구': { textContent: '10' },
-      '성동구': { textContent: '11' },
-      '성북구': { textContent: '12' },
-      '송파구': { textContent: '13' },
-      '양천구': { textContent: '14' },
-      '영등포구': { textContent: '15' },
-      '용산구': { textContent: '16' },
-      '은평구': { textContent: '17' },
-      '종로구': { textContent: '18' },
-      '중구': { textContent: '19' },
-      '중랑구': { textContent: '20' },
-    };
     if (rainfall === 0) {
       color = '#FFFFFF'; // 흰색
     } else if (rainfall <= 0.5) {
@@ -292,7 +265,35 @@ async function startDataLayer(geojson) {
         polygons.push(polygon);
       });
 
-      const rainfallData = await fetchRainfallData();
+      // 임의의 강수량 데이터 생성
+      const rainfallData = {
+        '강남구': { textContent: '0' },
+        '강동구': { textContent: '0.5' },
+        '강북구': { textContent: '1' },
+        '강서구': { textContent: '1.5' },
+        '관악구': { textContent: '2' },
+        '광진구': { textContent: '3' },
+        '구로구': { textContent: '4' },
+        '금천구': { textContent: '4.5' },
+        '노원구': { textContent: '5' },
+        '도봉구': { textContent: '6' },
+        '동대문구': { textContent: '6.5' },
+        '동작구': { textContent: '7' },
+        '마포구': { textContent: '8' },
+        '서대문구': { textContent: '9' },
+        '서초구': { textContent: '10' },
+        '성동구': { textContent: '11' },
+        '성북구': { textContent: '12' },
+        '송파구': { textContent: '13' },
+        '양천구': { textContent: '14' },
+        '영등포구': { textContent: '15' },
+        '용산구': { textContent: '16' },
+        '은평구': { textContent: '17' },
+        '종로구': { textContent: '18' },
+        '중구': { textContent: '19' },
+        '중랑구': { textContent: '20' },
+      };
+
       updateMapStyle(rainfallData);
     }
   } catch (error) {
