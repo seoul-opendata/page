@@ -215,21 +215,23 @@ async function showShelters(map, urls) {
     markers.push(marker); // 마커 배열에 추가
   });
 }
-document.querySelector('#shelter-button').addEventListener('click', async function(e) {
-  e.preventDefault();
+document.querySelectorAll('.shelter-button').forEach((element) => {
+  element.addEventListener('click', async function(e) {
+    e.preventDefault();
 
-  // 폴리곤 숨기기
-  polygons.forEach(function(polygon) {
-    polygon.setVisible(false);
+    // 폴리곤 숨기기
+    polygons.forEach(function(polygon) {
+      polygon.setVisible(false);
+    });
+
+    // 대피소 마커 생성
+    const urls = [
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1/1000',
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1001/2000'
+    ];
+    showShelters(map, urls);
   });
-
-  // 대피소 마커 생성
-  const urls = [
-    'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1/1000',
-    'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1001/2000'
-  ];
-  showShelters(map, urls);
-});
+})
 
 async function startDataLayer(geojson) {
   try {
