@@ -3,7 +3,7 @@ var mapData;
 var proj4 = window.proj4;
 var HOME_PATH = 'https://seoulshelter.info';
 let markers = [];
-let polygons = []; // 폴리곤을 저장할 배열
+let polygons = []; 
 var isShelterButtonClicked = false; 
 
 // 좌표 변환을 위한 proj4 정의
@@ -78,7 +78,7 @@ function loadGeoJson() {
   });
 }
 
-window.onload = loadScript; // 페이지가 완전히 로드된 후에 loadScript 함수를 호출합니다.
+window.onload = loadScript; 
 
 function handleMouseOver(e) {
   map.data.overrideStyle(e.feature, {
@@ -101,16 +101,38 @@ function handleMouseOut(e) {
   });
 }
 function initMap() {
-  // 맵이 이미 초기화되었는지 확인
   if (!map) {
-    map = new naver.maps.Map(document.getElementById("map"), {
-      zoom: 12,
-      mapTypeId: "normal",
-      center: new naver.maps.LatLng(37.5665, 126.978), // 서울시청
+    // 사용자의 위치 정보를 얻습니다.
+    navigator.geolocation.getCurrentPosition(function(position) {
+      // 사용자의 위도와 경도를 얻습니다.
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      // 사용자의 위치를 기준으로 지도를 생성합니다.
+      map = new naver.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        mapTypeId: "normal",
+        center: new naver.maps.LatLng(lat, lng),
+      });
+
+      // 지도가 생성된 후에 폴리곤을 로드합니다.
+      loadGeoJson();
+    }, function(error) {
+      // 사용자가 위치 정보를 제공하지 않았거나, 다른 오류가 발생한 경우
+      console.error(`Failed to get user's location: ${error}`);
+
+      // 서울시청을 기준으로 지도를 생성합니다.
+      map = new naver.maps.Map(document.getElementById("map"), {
+        zoom: 12,
+        mapTypeId: "normal",
+        center: new naver.maps.LatLng(37.5665, 126.978),
+      });
+
+      // 지도가 생성된 후에 폴리곤을 로드합니다.
+      loadGeoJson();
     });
   }
 }
-
 document.querySelector('#flood-risk-button').addEventListener('click', async function(e) {
   e.preventDefault();
 
