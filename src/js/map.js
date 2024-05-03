@@ -38,7 +38,10 @@ async function fetchRainfallData() {
   });
 
   await Promise.all(requests);
-
+  districts.forEach((district, index) => {
+    rainfallData[district] = (index + 1) * 2; // 각 구의 강수량을 2, 4, 6, ..., 50으로 설정합니다.
+  });
+  
   return rainfallData;
 }
 function loadScript() {
