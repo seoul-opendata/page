@@ -116,14 +116,13 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
 
   });
 })
-
 async function showShelters(map, urls) {
   const coordinatesPromises = urls.map(url => getCoordinates(url));
   const coordinatesArrays = await Promise.all(coordinatesPromises);
   const coordinates = coordinatesArrays.flat();
 
-  coordinates.forEach(coordinate => {
-    const marker = new naver.maps.Marker({
+  const markers = coordinates.map(coordinate => {
+    return new naver.maps.Marker({
       map: map,
       icon: {
           content: [
@@ -134,8 +133,20 @@ async function showShelters(map, urls) {
       },
       position: coordinate
     });
-    marker.setMap(map);
-    markers.push(marker); // 마커 배열에 추가
+  });
+
+  const markerClustering = new MarkerClustering({
+    minClusterSize: 2,
+    maxZoom: 8,
+    map: map,
+    markers: markers,
+    disableClickZoom: false,
+    gridSize: 120,
+    icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+    indexGenerator: [10, 100, 200, 500, 1000],
+    stylingFunction: function(clusterMarker, count) {
+      $(clusterMarker.getElement()).find('div:first-child').text(count);
+    }
   });
 }
 
