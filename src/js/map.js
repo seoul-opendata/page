@@ -150,8 +150,8 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
 
     // 대피소 마커 생성
     const urls = [
-      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1/1000',
-      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1001/2000'
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
     ];
     showShelters(map, urls);
   });
@@ -247,10 +247,10 @@ async function getCoordinates(url) {
     throw new Error('row tag not found in the XML document.');
   }
   const coordinates = Array.from(rowElements).map(rowElement => {
-    const lonElement = rowElement.getElementsByTagName('LON')[0];
-    const latElement = rowElement.getElementsByTagName('LAT')[0];
+    const lonElement = rowElement.getElementsByTagName('XCORD')[0];
+    const latElement = rowElement.getElementsByTagName('YCORD')[0];
     if (!lonElement || !latElement) {
-      throw new Error('LON or LAT tag not found in the row element.');
+      throw new Error('XCORD or YCORD tag not found in the row element.');
     }
     return new naver.maps.LatLng(parseFloat(latElement.textContent), parseFloat(lonElement.textContent));
   });
