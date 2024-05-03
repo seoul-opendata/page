@@ -55,24 +55,6 @@ function updateMapStyle(rainfallData) {
       strokeOpacity: isShelterButtonClicked ? 0 : 1
     });
   });
-
-map.data.addListener('mouseover', function(e) {
-  const district = e.feature.getProperty('district');
-  const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
-  var color = rainfall > 0 ? 'blue' : 'green';
-
-  map.data.overrideStyle(e.feature, {
-      fillOpacity : 0.6,
-      fillColor: color,
-      strokeColor: color,
-      strokeWeight: 2,
-      strokeOpacity: 1
-  });
-});
-
-  map.data.addListener('mouseout', function(e) {
-      map.data.revertStyle();
-  });
 }
 
 function loadScript() {
@@ -132,17 +114,18 @@ function initMap() {
 document.querySelector('#flood-risk-button').addEventListener('click', async function(e) {
   e.preventDefault();
 
-  // 맵 파기
-  map.destroy();
-  map = null;
-
-  // 맵 초기화
-  initMap();
+  // 마커 지우기
+  markers.forEach(function(marker) {
+    marker.setMap(null);
+  });
+  markers = [];
 
   // 폴리곤 보이기
-  loadGeoJson();
-});
+  polygons.forEach(function(polygon) {
+    polygon.setVisible(true);
+  });
 
+});
 async function showShelters(map, urls) {
   const coordinatesPromises = urls.map(url => getCoordinates(url));
   const coordinatesArrays = await Promise.all(coordinatesPromises);
@@ -168,12 +151,10 @@ async function showShelters(map, urls) {
 document.querySelector('#shelter-button').addEventListener('click', async function(e) {
   e.preventDefault();
 
-  // 맵 파기
-  map.destroy();
-  map = null;
-
-  // 맵 초기화
-  initMap();
+  // 폴리곤 숨기기
+  polygons.forEach(function(polygon) {
+    polygon.setVisible(false);
+  });
 
   // 대피소 마커 생성
   const urls = [
@@ -195,27 +176,50 @@ async function startDataLayer(geojson) {
 
     // '대피소' 버튼이 눌리지 않았을 때만 폴리곤 생성
     if (!isShelterButtonClicked) {
-      map.data.addGeoJson(geojson);
-
       // 폴리곤을 배열에 추가
-      map.data.forEach(function(feature) {
-        polygons.push(feature);
+      geojson.features.forEach(function(feature) {
+        // 폴리곤 생성
+        var polygon = new naver.maps.Polygon({
+          map: map,
+          paths: feature.geometry.coordinates,
+          fillColor: '#ff0000',
+          fillOpacity: 0.3,
+          strokeColor: '#ff0000',
+          strokeOpacity: 0.6,
+          strokeWeight: 2,
+          id: feature.properties.district // id 속성 추가
+        });
+
+        // 이벤트 리스너 추가
+        naver.maps.Event.addListener(polygon, 'mouseover', function(e) {
+          const district = polygon.id;
+          const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
+          var color = rainfall > 0 ? 'blue' : 'green';
+
+          polygon.setOptions({
+            fillOpacity : 0.6,
+            fillColor: color,
+            strokeColor: color,
+            strokeWeight: 2,
+            strokeOpacity: 1
+          });
+        });
+
+        naver.maps.Event.addListener(polygon, 'mouseout', function(e) {
+          polygon.setOptions({
+            fillOpacity: 0.3,
+            fillColor: '#ff0000',
+            strokeColor: '#ff0000',
+            strokeWeight: 2,
+            strokeOpacity: 0.6
+          });
+        });
+
+        polygons.push(polygon);
       });
 
-      map.data.addListener('click', function(e) {
-        var feature = e.feature;
-
-        if (feature.getProperty('focus') !== true) {
-          feature.setProperty('focus', true);
-        } else {
-          feature.setProperty('focus', false);
-        }
-      });
-
-      map.data.addListener('mouseover', handleMouseOver);
-      map.data.addListener('mouseout', handleMouseOut);
       const rainfallData = await fetchRainfallData();
-      updateMapStyle(map, rainfallData);
+      updateMapStyle(rainfallData);
     }
   } catch (error) {
     console.error(`Failed to start data layer: ${error}`);
