@@ -5,7 +5,6 @@ var HOME_PATH = 'https://seoulshelter.info';
 let markers = [];
 let polygons = []; 
 var isShelterButtonClicked = false; 
-var rainfallData = {}; // 전역 변수로 선언
 // 좌표 변환을 위한 proj4 정의
 proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
@@ -269,7 +268,7 @@ async function startDataLayer(geojson) {
       });
 
       // 임의의 강수량 데이터 생성
-      rainfallData = {
+      rainfallData = { // 전역 변수 rainfallData 사용
         '강남구': { textContent: '0' },
         '강동구': { textContent: '0.5' },
         '강북구': { textContent: '1' },
@@ -303,7 +302,6 @@ async function startDataLayer(geojson) {
     console.error(`Failed to start data layer: ${error}`);
   }
 }
-
 async function getCoordinates(url) {
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
   const response = await fetch(proxyUrl, {
