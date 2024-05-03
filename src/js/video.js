@@ -1,6 +1,6 @@
 $(document).ready(function () {
   $(".safe-video").magnificPopup({
-    disableOn: 700,
+    disableOn: 100,
     type: "iframe",
     mainClass: "mfp-fade",
     removalDelay: 160,
