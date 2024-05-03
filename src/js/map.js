@@ -41,21 +41,20 @@ async function fetchRainfallData() {
   return rainfallData;
 }
 
-function updateMapStyle(map, rainfallData) {
-  map.data.setStyle(function(feature) {
-    const district = feature.getProperty('district');
+function updateMapStyle(rainfallData) {
+  polygons.forEach(function(polygon) {
+    const district = polygon.getOptions().district;
     const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
     var color = rainfall > 0 ? 'skyblue' : '#ffffff';  
 
-    return {
+    polygon.setOptions({
       fillColor: color,
-      fillOpacity: isShelterButtonClicked ? 0 : (feature.getProperty('focus') || rainfall > 0 ? 0.6 : 0.6), // fillOpacity 값을 0으로 설정
+      fillOpacity: isShelterButtonClicked ? 0 : (polygon.getOptions().focus || rainfall > 0 ? 0.6 : 0.6),
       strokeColor: color,
-      strokeWeight: feature.getProperty('focus') || rainfall > 0 ? 4 : 2,
+      strokeWeight: polygon.getOptions().focus || rainfall > 0 ? 4 : 2,
       strokeOpacity: isShelterButtonClicked ? 0 : 1
-    };
+    });
   });
-}
 
 map.data.addListener('mouseover', function(e) {
   const district = e.feature.getProperty('district');
@@ -74,7 +73,7 @@ map.data.addListener('mouseover', function(e) {
   map.data.addListener('mouseout', function(e) {
       map.data.revertStyle();
   });
-
+}
 
 function loadScript() {
   var script = document.createElement('script');
@@ -169,13 +168,12 @@ async function showShelters(map, urls) {
 document.querySelector('#shelter-button').addEventListener('click', async function(e) {
   e.preventDefault();
 
-  // 폴리곤 숨기기
-  polygons.forEach(function(polygon) {
-    polygon.setOptions({
-      fillOpacity: 0,
-      strokeOpacity: 0
-    });
-  });
+  // 맵 파기
+  map.destroy();
+  map = null;
+
+  // 맵 초기화
+  initMap();
 
   // 대피소 마커 생성
   const urls = [
@@ -200,19 +198,8 @@ async function startDataLayer(geojson) {
       map.data.addGeoJson(geojson);
 
       // 폴리곤을 배열에 추가
-      geojson.features.forEach(function(feature) {
-        // 폴리곤 생성
-        var polygon = new naver.maps.Polygon({
-          map: map,
-          paths: feature.geometry.coordinates,
-          fillColor: '#ff0000',
-          fillOpacity: 0.3,
-          strokeColor: '#ff0000',
-          strokeOpacity: 0.6,
-          strokeWeight: 2,
-          id: 'polygon' // id 속성 추가
-        });
-        polygons.push(polygon);
+      map.data.forEach(function(feature) {
+        polygons.push(feature);
       });
 
       map.data.addListener('click', function(e) {
@@ -234,7 +221,6 @@ async function startDataLayer(geojson) {
     console.error(`Failed to start data layer: ${error}`);
   }
 }
-
 async function getCoordinates(url) {
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
   const response = await fetch(proxyUrl, {
