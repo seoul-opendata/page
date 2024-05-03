@@ -117,11 +117,10 @@ function handleMouseOut(e) {
       strokeOpacity: 1
   });
 }
-
-function initMap() {
+async function initMap() {
   if (!map) {
     // 사용자의 위치 정보를 얻습니다.
-    navigator.geolocation.getCurrentPosition(function(position) {
+    navigator.geolocation.getCurrentPosition(async function(position) {
       // 사용자의 위도와 경도를 얻습니다.
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
@@ -134,8 +133,37 @@ function initMap() {
       });
 
       // 지도가 생성된 후에 폴리곤을 로드합니다.
-      loadGeoJson();
-    }, function(error) {
+      await loadGeoJson();
+      await fetchRainfallData();
+      rainfallData = { 
+        '강남구': { textContent: '0' },
+        '강동구': { textContent: '0.5' },
+        '강북구': { textContent: '1' },
+        '강서구': { textContent: '1.5' },
+        '관악구': { textContent: '2' },
+        '광진구': { textContent: '3' },
+        '구로구': { textContent: '4' },
+        '금천구': { textContent: '4.5' },
+        '노원구': { textContent: '5' },
+        '도봉구': { textContent: '6' },
+        '동대문구': { textContent: '6.5' },
+        '동작구': { textContent: '7' },
+        '마포구': { textContent: '8' },
+        '서대문구': { textContent: '9' },
+        '서초구': { textContent: '10' },
+        '성동구': { textContent: '11' },
+        '성북구': { textContent: '12' },
+        '송파구': { textContent: '13' },
+        '양천구': { textContent: '14' },
+        '영등포구': { textContent: '15' },
+        '용산구': { textContent: '16' },
+        '은평구': { textContent: '17' },
+        '종로구': { textContent: '18' },
+        '중구': { textContent: '19' },
+        '중랑구': { textContent: '20' },
+      };
+      updateMapStyle(rainfallData);
+    }, async function(error) {
       // 사용자가 위치 정보를 제공하지 않았거나, 다른 오류가 발생한 경우
       console.error(`Failed to get user's location: ${error}`);
 
@@ -147,7 +175,36 @@ function initMap() {
       });
 
       // 지도가 생성된 후에 폴리곤을 로드합니다.
-      loadGeoJson();
+      await loadGeoJson();
+      await fetchRainfallData();
+      rainfallData = { 
+        '강남구': { textContent: '0' },
+        '강동구': { textContent: '0.5' },
+        '강북구': { textContent: '1' },
+        '강서구': { textContent: '1.5' },
+        '관악구': { textContent: '2' },
+        '광진구': { textContent: '3' },
+        '구로구': { textContent: '4' },
+        '금천구': { textContent: '4.5' },
+        '노원구': { textContent: '5' },
+        '도봉구': { textContent: '6' },
+        '동대문구': { textContent: '6.5' },
+        '동작구': { textContent: '7' },
+        '마포구': { textContent: '8' },
+        '서대문구': { textContent: '9' },
+        '서초구': { textContent: '10' },
+        '성동구': { textContent: '11' },
+        '성북구': { textContent: '12' },
+        '송파구': { textContent: '13' },
+        '양천구': { textContent: '14' },
+        '영등포구': { textContent: '15' },
+        '용산구': { textContent: '16' },
+        '은평구': { textContent: '17' },
+        '종로구': { textContent: '18' },
+        '중구': { textContent: '19' },
+        '중랑구': { textContent: '20' },
+      };
+      updateMapStyle(rainfallData);
     });
   }
 }
@@ -186,7 +243,6 @@ async function showShelters(map, urls) {
       },
       position: coordinate
     });
-    console.log(`Adding marker: ${marker}`); 
     marker.setMap(map);
     markers.push(marker); // 마커 배열에 추가
   });
@@ -210,7 +266,7 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
   });
 })
 
-let rainfallData = {}; // 전역 변수로 선언
+let rainfallData = {};
 
 async function startDataLayer(geojson) {
   try {
@@ -235,8 +291,8 @@ async function startDataLayer(geojson) {
           strokeColor: '#ff0000',
           strokeOpacity: 0.6,
           strokeWeight: 2,
-          id: feature.properties.district, // id 속성 추가
-          district: feature.properties.district // district 속성 추가
+          id: feature.properties.district, 
+          district: feature.properties.district 
         });
 
         // 이벤트 리스너 추가
@@ -267,41 +323,13 @@ async function startDataLayer(geojson) {
         polygons.push(polygon);
       });
 
-      // 임의의 강수량 데이터 생성
-      rainfallData = { // 전역 변수 rainfallData 사용
-        '강남구': { textContent: '0' },
-        '강동구': { textContent: '0.5' },
-        '강북구': { textContent: '1' },
-        '강서구': { textContent: '1.5' },
-        '관악구': { textContent: '2' },
-        '광진구': { textContent: '3' },
-        '구로구': { textContent: '4' },
-        '금천구': { textContent: '4.5' },
-        '노원구': { textContent: '5' },
-        '도봉구': { textContent: '6' },
-        '동대문구': { textContent: '6.5' },
-        '동작구': { textContent: '7' },
-        '마포구': { textContent: '8' },
-        '서대문구': { textContent: '9' },
-        '서초구': { textContent: '10' },
-        '성동구': { textContent: '11' },
-        '성북구': { textContent: '12' },
-        '송파구': { textContent: '13' },
-        '양천구': { textContent: '14' },
-        '영등포구': { textContent: '15' },
-        '용산구': { textContent: '16' },
-        '은평구': { textContent: '17' },
-        '종로구': { textContent: '18' },
-        '중구': { textContent: '19' },
-        '중랑구': { textContent: '20' },
-      };
-
-      updateMapStyle(rainfallData);
+      updateMapStyle(rainfallData); // 폴리곤이 생성된 후에 updateMapStyle 함수 호출
     }
   } catch (error) {
     console.error(`Failed to start data layer: ${error}`);
   }
 }
+
 async function getCoordinates(url) {
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
   const response = await fetch(proxyUrl, {
