@@ -190,7 +190,7 @@ async function startDataLayer(geojson) {
         } else if (rainfall <= 11.5) {
           color = '#9300E4'; // 진보라
         } else {
-          color = '#000390'; // 푸른색
+          color = '#000147'; // 짙은 푸른색
         }
 
         // 폴리곤 생성
@@ -199,9 +199,9 @@ async function startDataLayer(geojson) {
           paths: feature.geometry.coordinates,
           fillColor: color,
           fillOpacity: 0.3,
-          strokeColor: color,
+          strokeColor: '#000000', // 테두리 색상을 검은색으로 설정합니다.
           strokeOpacity: 0.6,
-          strokeWeight: 2,
+          strokeWeight: 2, // 테두리 두께를 3으로 설정합니다.
           id: feature.properties.district, 
           district: feature.properties.district 
         });
