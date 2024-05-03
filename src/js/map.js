@@ -11,6 +11,7 @@ proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
   ['EPSG:4326', '+proj=longlat +datum=WGS84 +no_defs']
 ]);
+
 async function fetchRainfallData() {
   const districts = ['강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'];
   const rainfallData = {};
@@ -99,6 +100,7 @@ function handleMouseOut(e) {
       strokeOpacity: 1
   });
 }
+
 function initMap() {
   if (!map) {
     // 사용자의 위치 정보를 얻습니다.
@@ -132,21 +134,24 @@ function initMap() {
     });
   }
 }
-document.querySelector('#flood-risk-button').addEventListener('click', async function(e) {
-  e.preventDefault();
+document.querySelectorAll('.flood-risk-button').forEach((element) => {
+  element.addEventListener('click', async function(e) {
+    e.preventDefault();
 
-  // 마커 지우기
-  markers.forEach(function(marker) {
-    marker.setMap(null);
+    // 마커 지우기
+    markers.forEach(function(marker) {
+      marker.setMap(null);
+    });
+    markers = [];
+
+    // 폴리곤 보이기
+    polygons.forEach(function(polygon) {
+      polygon.setVisible(true);
+    });
+
   });
-  markers = [];
+})
 
-  // 폴리곤 보이기
-  polygons.forEach(function(polygon) {
-    polygon.setVisible(true);
-  });
-
-});
 async function showShelters(map, urls) {
   const coordinatesPromises = urls.map(url => getCoordinates(url));
   const coordinatesArrays = await Promise.all(coordinatesPromises);
@@ -169,21 +174,24 @@ async function showShelters(map, urls) {
     markers.push(marker); // 마커 배열에 추가
   });
 }
-document.querySelector('#shelter-button').addEventListener('click', async function(e) {
-  e.preventDefault();
 
-  // 폴리곤 숨기기
-  polygons.forEach(function(polygon) {
-    polygon.setVisible(false);
+document.querySelectorAll('.shelter-button').forEach((element) => {
+  element.addEventListener('click', async function(e) {
+    e.preventDefault();
+
+    // 폴리곤 숨기기
+    polygons.forEach(function(polygon) {
+      polygon.setVisible(false);
+    });
+
+    // 대피소 마커 생성
+    const urls = [
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1/1000',
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1001/2000'
+    ];
+    showShelters(map, urls);
   });
-
-  // 대피소 마커 생성
-  const urls = [
-    'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1/1000',
-    'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbEqkShelter/1001/2000'
-  ];
-  showShelters(map, urls);
-});
+})
 
 async function startDataLayer(geojson) {
   try {
@@ -246,6 +254,7 @@ async function startDataLayer(geojson) {
     console.error(`Failed to start data layer: ${error}`);
   }
 }
+
 async function getCoordinates(url) {
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
   const response = await fetch(proxyUrl, {
