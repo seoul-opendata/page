@@ -10,34 +10,61 @@ proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
   ['EPSG:4326', '+proj=longlat +datum=WGS84 +no_defs']
 ]);
-
 async function fetchRainfallData() {
-  const districts = ['강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'];
+  // const districts = ['강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구', '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구', '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'];
 
-  const requests = districts.map(async district => {
-      const encodedDistrict = encodeURIComponent(district);
-      const apiUrl = `http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/ListRainfallService/1/5/${encodedDistrict}`;
-      const proxyUrl = `https://proxy.seoulshelter.info/${apiUrl}`;
-      const response = await fetch(proxyUrl);
-      const text = await response.text();
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(text, "text/xml");
-      const rows = Array.from(xmlDoc.querySelectorAll('row'));
-      if (rows.length === 0) {
-          console.error(`No data for ${district}`);
-          return;
-      }
-      const latestData = rows.reduce((latest, current) => {
-          const currentReceiveTime = current.querySelector('RECEIVE_TIME').textContent;
-          const latestReceiveTime = latest ? latest.querySelector('RECEIVE_TIME').textContent : null;
-          return new Date(currentReceiveTime) > new Date(latestReceiveTime) ? current : latest;
-      }, null);
-      if (latestData) {
-        rainfallData[district] = latestData.querySelector('RAINFALL10').textContent; // 강수량을 할당
-      }
-  });
+  // const requests = districts.map(async district => {
+  //     const encodedDistrict = encodeURIComponent(district);
+  //     const apiUrl = `http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/ListRainfallService/1/5/${encodedDistrict}`;
+  //     const proxyUrl = `https://proxy.seoulshelter.info/${apiUrl}`;
+  //     const response = await fetch(proxyUrl);
+  //     const text = await response.text();
+  //     const parser = new DOMParser();
+  //     const xmlDoc = parser.parseFromString(text, "text/xml");
+  //     const rows = Array.from(xmlDoc.querySelectorAll('row'));
+  //     if (rows.length === 0) {
+  //         console.error(`No data for ${district}`);
+  //         return;
+  //     }
+  //     const latestData = rows.reduce((latest, current) => {
+  //         const currentReceiveTime = current.querySelector('RECEIVE_TIME').textContent;
+  //         const latestReceiveTime = latest ? latest.querySelector('RECEIVE_TIME').textContent : null;
+  //         return new Date(currentReceiveTime) > new Date(latestReceiveTime) ? current : latest;
+  //     }, null);
+  //     if (latestData) {
+  //       rainfallData[district] = latestData.querySelector('RAINFALL10').textContent; // 강수량을 할당
+  //     }
+  // });
 
-  await Promise.all(requests);
+  // await Promise.all(requests);
+
+  rainfallData = { 
+    '강남구': 0,
+    '강동구': 0.5,
+    '강북구': 1,
+    '강서구': 1.5,
+    '관악구': 2,
+    '광진구': 3,
+    '구로구': 4,
+    '금천구': 4.5,
+    '노원구': 5,
+    '도봉구': 6,
+    '동대문구': 6.5,
+    '동작구': 7,
+    '마포구': 8,
+    '서대문구': 9,
+    '서초구': 10,
+    '성동구': 11,
+    '성북구': 12,
+    '송파구': 13,
+    '양천구': 14,
+    '영등포구': 15,
+    '용산구': 16,
+    '은평구': 17,
+    '종로구': 18,
+    '중구': 19,
+    '중랑구': 20,
+  };
 
   return rainfallData;
 }
@@ -137,33 +164,6 @@ async function initMap() {
       // 지도가 생성된 후에 폴리곤을 로드합니다.
       await loadGeoJson();
       await fetchRainfallData();
-      rainfallData = { 
-        '강남구': 0,
-        '강동구': 0.5,
-        '강북구': 1,
-        '강서구': 1.5,
-        '관악구': 2,
-        '광진구': 3,
-        '구로구': 4,
-        '금천구': 4.5,
-        '노원구': 5,
-        '도봉구': 6,
-        '동대문구': 6.5,
-        '동작구': 7,
-        '마포구': 8,
-        '서대문구': 9,
-        '서초구': 10,
-        '성동구': 11,
-        '성북구': 12,
-        '송파구': 13,
-        '양천구': 14,
-        '영등포구': 15,
-        '용산구': 16,
-        '은평구': 17,
-        '종로구': 18,
-        '중구': 19,
-        '중랑구': 20,
-      };
       updateMapStyle(rainfallData);
     }, async function(error) {
       // 사용자가 위치 정보를 제공하지 않았거나, 다른 오류가 발생한 경우
@@ -179,33 +179,6 @@ async function initMap() {
       // 지도가 생성된 후에 폴리곤을 로드합니다.
       await loadGeoJson();
       await fetchRainfallData();
-      rainfallData = { 
-        '강남구': 0,
-        '강동구': 0.5,
-        '강북구': 1,
-        '강서구': 1.5,
-        '관악구': 2,
-        '광진구': 3,
-        '구로구': 4,
-        '금천구': 4.5,
-        '노원구': 5,
-        '도봉구': 6,
-        '동대문구': 6.5,
-        '동작구': 7,
-        '마포구': 8,
-        '서대문구': 9,
-        '서초구': 10,
-        '성동구': 11,
-        '성북구': 12,
-        '송파구': 13,
-        '양천구': 14,
-        '영등포구': 15,
-        '용산구': 16,
-        '은평구': 17,
-        '종로구': 18,
-        '중구': 19,
-        '중랑구': 20,
-      };
       updateMapStyle(rainfallData);
     });
   }
