@@ -143,28 +143,28 @@ async function showShelters(map, urls) {
     anchor: new naver.maps.Point(20, 20)
   };
   const htmlMarker2 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-2.png);background-size:contain;"></div>',
     size: new naver.maps.Size(40, 40),
     anchor: new naver.maps.Point(20, 20)
   };
   const htmlMarker3 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-3.png);background-size:contain;"></div>',
     size: new naver.maps.Size(40, 40),
     anchor: new naver.maps.Point(20, 20)
   };
   const htmlMarker4 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-4.png);background-size:contain;"></div>',
     size: new naver.maps.Size(40, 40),
     anchor: new naver.maps.Point(20, 20)
   };
   const htmlMarker5 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
+    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-5.png);background-size:contain;"></div>',
     size: new naver.maps.Size(40, 40),
     anchor: new naver.maps.Point(20, 20)
   };
   const markerClustering = new MarkerClustering({
     minClusterSize: 2,
-    maxZoom: 8,
+    maxZoom: 14,
     map: map,
     markers: markers,
     disableClickZoom: false,
