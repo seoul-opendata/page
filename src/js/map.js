@@ -32,17 +32,20 @@ async function fetchRainfallData() {
           const latestReceiveTime = latest ? latest.querySelector('RECEIVE_TIME').textContent : null;
           return new Date(currentReceiveTime) > new Date(latestReceiveTime) ? current : latest;
       }, null);
-      rainfallData[district] = latestData.querySelector('RF').textContent; // 강수량을 할당
+      if (latestData) {
+        rainfallData[district] = latestData.querySelector('RAINFALL10').textContent; // 강수량을 할당
+      }
   });
 
   await Promise.all(requests);
 
   return rainfallData;
 }
+
 function updateMapStyle(rainfallData) {
   polygons.forEach(function(polygon) {
     const district = polygon.getOptions().district;
-    const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
+    const rainfall = rainfallData[district] ? Number(rainfallData[district]) : 0; // 수정된 부분
     var color;
     if (rainfall === 0) {
       color = '#FFFFFF'; // 흰색
