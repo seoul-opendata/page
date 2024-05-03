@@ -62,10 +62,11 @@ function loadScript() {
   script.src = "https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=4qd9nt8f83";
   script.onload = function() {
       initMap();
-      loadGeoJson();
   }; 
   document.body.appendChild(script);
 }
+
+window.onload = loadScript; 
 function loadGeoJson() {
   $.ajax({
     url: HOME_PATH +'/js/seoul.json',
@@ -77,8 +78,6 @@ function loadGeoJson() {
     console.error(`Failed to load geojson data: ${textStatus}, ${errorThrown}`);
   });
 }
-
-window.onload = loadScript; 
 
 function handleMouseOver(e) {
   map.data.overrideStyle(e.feature, {
