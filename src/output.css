@@ -624,6 +624,14 @@ video {
   margin-right: auto;
 }
 
+.ml-5 {
+  margin-left: 1.25rem;
+}
+
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
 .block {
   display: block;
 }
@@ -640,6 +648,10 @@ video {
   display: none;
 }
 
+.aspect-auto {
+  aspect-ratio: auto;
+}
+
 .h-10 {
   height: 2.5rem;
 }
@@ -652,12 +664,20 @@ video {
   height: 1.5rem;
 }
 
+.h-64 {
+  height: 16rem;
+}
+
 .h-9 {
   height: 2.25rem;
 }
 
 .h-dvh {
   height: 100dvh;
+}
+
+.w-11\/12 {
+  width: 91.666667%;
 }
 
 .w-20 {
