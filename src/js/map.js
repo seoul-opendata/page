@@ -221,6 +221,7 @@ async function startDataLayer(geojson) {
         return transformed;
       });
     });
+
     // '대피소' 버튼이 눌리지 않았을 때만 폴리곤 생성
     if (!isShelterButtonClicked) {
       // 폴리곤을 배열에 추가
@@ -234,12 +235,13 @@ async function startDataLayer(geojson) {
           strokeColor: '#ff0000',
           strokeOpacity: 0.6,
           strokeWeight: 2,
-          id: feature.properties.district // id 속성 추가
+          id: feature.properties.district, // id 속성 추가
+          district: feature.properties.district // district 속성 추가
         });
 
         // 이벤트 리스너 추가
         naver.maps.Event.addListener(polygon, 'mouseover', function(e) {
-          const district = polygon.id;
+          const district = polygon.getOptions().district;
           const rainfall = rainfallData[district] ? Number(rainfallData[district].textContent) : 0;
           var color = rainfall > 0 ? 'blue' : 'green';
 
@@ -300,7 +302,6 @@ async function startDataLayer(geojson) {
     console.error(`Failed to start data layer: ${error}`);
   }
 }
-
 async function getCoordinates(url) {
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
   const response = await fetch(proxyUrl, {
