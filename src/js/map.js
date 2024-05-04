@@ -277,7 +277,8 @@ async function getCoordinatesFromAddress(url) {
   const coordinates = [];
   for (const address of addresses) {
     const geocodeUrl = `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`;
-    const geocodeResponse = await fetch(geocodeUrl, {
+    const proxyGeocodeUrl = `https://proxy.seoulshelter.info/${geocodeUrl}`;
+    const geocodeResponse = await fetch(proxyGeocodeUrl, {
       headers: {
         'X-NCP-APIGW-API-KEY-ID': '4qd9nt8f83',
         'X-NCP-APIGW-API-KEY': 'RL8V8aTvon2oIown9JuRE8erc6yCHM9J9rKBdxls'
@@ -291,6 +292,7 @@ async function getCoordinatesFromAddress(url) {
   }
   return coordinates;
 }
+
 async function startDataLayer(geojson) {
   try {
     // 좌표 변환
