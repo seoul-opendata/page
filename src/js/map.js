@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
       // 사용자의 위치를 기준으로 지도의 중심을 이동하고, 레벨을 확대합니다.
       map.setCenter(new naver.maps.LatLng(lat, lng));
-      map.setZoom(22); // 사용자 위치 줌레벨 
+      map.setZoom(17); // 사용자 위치 줌레벨 
 
       // 사용자의 위치에 마커를 추가합니다.
       new naver.maps.Marker({
