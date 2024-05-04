@@ -133,7 +133,7 @@ async function showShelters(map, urls) {
 
   const coordinates = [];
   for (const url of urls) {
-    const urlCoordinates = await getCoordinatesFromAddress(url);
+    const urlCoordinates = await getCoordinatesFromXY(url); 
     coordinates.push(...urlCoordinates);
   }
 
@@ -287,7 +287,6 @@ async function getCoordinatesFromXY(url) {
   });
   return coordinates;
 }
-
 
 async function getCoordinatesFromAddress(url) {
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
