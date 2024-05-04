@@ -205,6 +205,10 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
       marker.setVisible(false);
     });
 
+    if (markerClustering) {
+      markerClustering.setMap(null);
+    }
+
     // 새로운 마커 생성
     if (shelterMarkers1.length === 0) {
       const urls = [
@@ -217,11 +221,6 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
     shelterMarkers1.forEach(marker => marker.setVisible(true));
 
     // 클러스터링 객체 생성
-    if (markerClustering) {
-      markerClustering.setMap(null);
-      markerClustering = null;
-    }
-
     markerClustering = new MarkerClustering({
       minClusterSize: 2,
       maxZoom: 14,
@@ -254,6 +253,10 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       marker.setVisible(false);
     });
 
+    if (markerClustering) {
+      markerClustering.setMap(null);
+    }
+
     // 새로운 마커 생성
     if (shelterMarkers2.length === 0) {
       const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
@@ -263,11 +266,6 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     shelterMarkers2.forEach(marker => marker.setVisible(true));
 
     // 클러스터링 객체 생성
-    if (markerClustering) {
-      markerClustering.setMap(null);
-      markerClustering = null;
-    }
-
     markerClustering = new MarkerClustering({
       minClusterSize: 2,
       maxZoom: 14,
