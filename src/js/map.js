@@ -304,6 +304,7 @@ async function getCoordinatesFromAddress(url) {
       throw new Error('ADR_NAM tag not found in the row element.');
     }
     const address = addressElement.textContent;
+    console.log(`ADR_NAM: ${address}`); // ADR_NAM 값을 콘솔에 출력
     return address;
   });
 
