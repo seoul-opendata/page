@@ -3,7 +3,8 @@ var mapData;
 var proj4 = window.proj4;
 var HOME_PATH = 'https://seoulshelter.info';
 let shelterMarkers = [];
-let polygons = []; 
+let polygons = [];
+let markerClustering;
 let rainfallData = {}; // 전역 변수로 선언
 var isShelterButtonClicked = false; 
 // 좌표 변환을 위한 proj4 정의
@@ -106,7 +107,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   });
 });
-
 document.querySelectorAll('.flood-risk-button').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
@@ -115,6 +115,11 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
     shelterMarkers.forEach(function(marker) {
       marker.setVisible(false);
     });
+
+    // 클러스터 숨기기
+    if (markerClustering) {
+      markerClustering.setMap(null);
+    }
 
     // 폴리곤 보이기
     polygons.forEach(function(polygon) {
@@ -125,8 +130,6 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
 async function showShelters(map, urls) {
   // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'block';
-
-  const HOME_PATH = '/images'; // 이미지 경로를 설정합니다.
   const coordinatesPromises = urls.map(url => getCoordinates(url));
   const coordinatesArrays = await Promise.all(coordinatesPromises);
   const coordinates = coordinatesArrays.flat();
@@ -147,52 +150,54 @@ async function showShelters(map, urls) {
     return marker;
   });
 
+  // 클러스터링을 적용합니다.
+  markerClustering = new MarkerClustering({
+    minClusterSize: 2,
+    maxZoom: 14,
+    map: map,
+    markers: markers, // 생성된 마커를 사용합니다.
+    disableClickZoom: false,
+    gridSize: 120,
+    icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+    indexGenerator: [10, 100, 200, 500, 1000],
+    stylingFunction: function(clusterMarker, count) {
+      $(clusterMarker.getElement()).find('div:first-child').text(count);
+    }
+  });
+
   // 로딩 팝업을 숨깁니다.
   document.getElementById('loading-popup').style.display = 'none';
 
   // 마커 배열을 반환합니다.
   return markers;
 }
-  // 클러스터 마커 아이콘을 정의합니다.
-  const htmlMarker1 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-1.png);background-size:contain;"></div>',
-    size: new naver.maps.Size(40, 40),
-    anchor: new naver.maps.Point(20, 20)
-  };
-  const htmlMarker2 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-2.png);background-size:contain;"></div>',
-    size: new naver.maps.Size(40, 40),
-    anchor: new naver.maps.Point(20, 20)
-  };
-  const htmlMarker3 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-3.png);background-size:contain;"></div>',
-    size: new naver.maps.Size(40, 40),
-    anchor: new naver.maps.Point(20, 20)
-  };
-  const htmlMarker4 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-4.png);background-size:contain;"></div>',
-    size: new naver.maps.Size(40, 40),
-    anchor: new naver.maps.Point(20, 20)
-  };
-  const htmlMarker5 = {
-    content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url('+ HOME_PATH +'/cluster-marker-5.png);background-size:contain;"></div>',
-    size: new naver.maps.Size(40, 40),
-    anchor: new naver.maps.Point(20, 20)
-  };
 
-const markerClustering = new MarkerClustering({
-  minClusterSize: 2,
-  maxZoom: 14,
-  map: map,
-  markers: shelterMarkers, 
-  disableClickZoom: false,
-  gridSize: 120,
-  icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
-  indexGenerator: [10, 100, 200, 500, 1000],
-  stylingFunction: function(clusterMarker, count) {
-    $(clusterMarker.getElement()).find('div:first-child').text(count);
-  }
-});
+// 클러스터 마커 아이콘을 정의합니다.
+const htmlMarker1 = {
+  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-1.png);background-size:contain;"></div>',
+  size: new naver.maps.Size(40, 40),
+  anchor: new naver.maps.Point(20, 20)
+};
+const htmlMarker2 = {
+  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-2.png);background-size:contain;"></div>',
+  size: new naver.maps.Size(40, 40),
+  anchor: new naver.maps.Point(20, 20)
+};
+const htmlMarker3 = {
+  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-3.png);background-size:contain;"></div>',
+  size: new naver.maps.Size(40, 40),
+  anchor: new naver.maps.Point(20, 20)
+};
+const htmlMarker4 = {
+  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-4.png);background-size:contain;"></div>',
+  size: new naver.maps.Size(40, 40),
+  anchor: new naver.maps.Point(20, 20)
+};
+const htmlMarker5 = {
+  content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-5.png);background-size:contain;"></div>',
+  size: new naver.maps.Size(40, 40),
+  anchor: new naver.maps.Point(20, 20)
+};
 
 document.querySelectorAll('.shelter-button').forEach((element) => {
   element.addEventListener('click', async function(e) {
@@ -214,6 +219,11 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
 
     // 대피소 마커 보이기
     shelterMarkers.forEach(marker => marker.setVisible(true));
+
+    // 클러스터 보이기
+    if (markerClustering) {
+      markerClustering.setMap(map);
+    }
   });
 });
 
