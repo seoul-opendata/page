@@ -71,10 +71,16 @@ async function initMap() {
       center: new naver.maps.LatLng(37.5665, 126.978),
     });
 
+    // 로딩 팝업을 보여줍니다.
+    document.getElementById('loading-popup').style.display = 'block';
+
     // 강수량 데이터를 불러옵니다.
     rainfallData = await fetchRainfallData();
     // 강수량 데이터가 불러와진 후에 폴리곤을 로드합니다.
     await loadGeoJson();
+
+    // 로딩 팝업을 숨깁니다.
+    document.getElementById('loading-popup').style.display = 'none';
   }
 }
 document.addEventListener('DOMContentLoaded', (event) => {
