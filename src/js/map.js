@@ -173,7 +173,7 @@ const markerClustering = new MarkerClustering({
   minClusterSize: 2,
   maxZoom: 14,
   map: map,
-  markers: shelterMarkers, // markers 대신 shelterMarkers를 사용합니다.
+  markers: shelterMarkers, 
   disableClickZoom: false,
   gridSize: 120,
   icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
@@ -192,12 +192,14 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 대피소 마커 생성
-    const urls = [
-      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
-      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
-    ];
-    shelterMarkers = await showShelters(map, urls); // 대피소 마커를 별도의 변수에 저장합니다.
+    // 대피소 마커가 없다면 생성
+    if (shelterMarkers.length === 0) {
+      const urls = [
+        'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
+        'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
+      ];
+      shelterMarkers = await showShelters(map, urls);
+    }
 
     // 대피소 마커 보이기
     shelterMarkers.forEach(marker => marker.setVisible(true));
