@@ -158,27 +158,6 @@ async function showShelters(map, urls, isAddress) {
     return marker;
   });
 
-  // 기존 클러스터링이 있다면 제거합니다.
-  if (markerClustering) {
-    markerClustering.setMap(null);
-    markerClustering = null;
-  }
-
-  // 새로운 클러스터링을 적용합니다.
-  markerClustering = new MarkerClustering({
-    minClusterSize: 2,
-    maxZoom: 14,
-    map: map,
-    markers: markers, // 생성된 마커를 사용합니다.
-    disableClickZoom: false,
-    gridSize: 120,
-    icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
-    indexGenerator: [10, 100, 200, 500, 1000],
-    stylingFunction: function(clusterMarker, count) {
-      $(clusterMarker.getElement()).find('div:first-child').text(count);
-    }
-  });
-
   // 로딩 팝업을 숨깁니다.
   document.getElementById('loading-popup').style.display = 'none';
 
@@ -236,10 +215,27 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
     }
 
     shelterMarkers1.forEach(marker => marker.setVisible(true));
-    // 클러스터링 객체의 마커를 업데이트
+
+    // 클러스터링 객체 생성
     if (markerClustering) {
-      markerClustering.setMarkers(shelterMarkers1);
+      markerClustering.setMap(null);
+      markerClustering = null;
     }
+
+    markerClustering = new MarkerClustering({
+      minClusterSize: 2,
+      maxZoom: 14,
+      map: map,
+      markers: shelterMarkers1,
+      disableClickZoom: false,
+      gridSize: 120,
+      icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+      indexGenerator: [10, 100, 200, 500, 1000],
+      stylingFunction: function(clusterMarker, count) {
+        $(clusterMarker.getElement()).find('div:first-child').text(count);
+      }
+    });
+
     console.log(shelterMarkers1);
   });
 });
@@ -265,9 +261,27 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     }
 
     shelterMarkers2.forEach(marker => marker.setVisible(true));
+
+    // 클러스터링 객체 생성
     if (markerClustering) {
-      markerClustering.setMarkers(shelterMarkers2);
+      markerClustering.setMap(null);
+      markerClustering = null;
     }
+
+    markerClustering = new MarkerClustering({
+      minClusterSize: 2,
+      maxZoom: 14,
+      map: map,
+      markers: shelterMarkers2,
+      disableClickZoom: false,
+      gridSize: 120,
+      icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+      indexGenerator: [10, 100, 200, 500, 1000],
+      stylingFunction: function(clusterMarker, count) {
+        $(clusterMarker.getElement()).find('div:first-child').text(count);
+      }
+    });
+
     console.log(shelterMarkers2);
   });
 });
