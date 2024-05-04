@@ -199,7 +199,7 @@ const htmlMarker5 = {
   anchor: new naver.maps.Point(20, 20)
 };
 
-document.querySelectorAll('.shelter-button').forEach((element) => {
+document.querySelectorAll('.shelter-button-1').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
 
