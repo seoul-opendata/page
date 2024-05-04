@@ -8,28 +8,32 @@ async function fetchDisasterMsgData() {
   const rows = Array.from(xmlDoc.querySelectorAll('row'));
   return rows.slice(0, 50);
 }
+let disasterMsgData = null;
 
 document.getElementById('alarm').addEventListener('click', async function() {
   var page = document.getElementById('page');
-  if (page.classList.contains('hidden')) {
-    page.classList.remove('hidden');
-    setTimeout(function() {
-      page.classList.remove('opacity-0');
-    }, 20);
+  if (page.classList.contains('show')) {
+    page.classList.remove('show');
+    // 페이지 내용을 초기화합니다.
+    while (page.firstChild) {
+      page.removeChild(page.firstChild);
+    }
+  } else {
+    page.classList.add('show');
 
-    // XML 데이터를 가져옵니다.
-    const rows = await fetchDisasterMsgData();
+    // 데이터가 없을 때만 API 요청을 보냅니다.
+    if (!disasterMsgData) {
+      disasterMsgData = await fetchDisasterMsgData().catch(error => {
+        console.error('Failed to fetch disaster message data:', error);
+      });
+    }
+
     // 페이지에 내용을 추가합니다.
-    rows.forEach(row => {
+    disasterMsgData.forEach(row => {
       const createDate = row.querySelector('create_date').textContent;
       const p = document.createElement('p');
       p.textContent = createDate;
       page.appendChild(p);
     });
-  } else {
-    page.classList.add('opacity-0');
-    setTimeout(function() {
-      page.classList.add('hidden');
-    }, 300);
   }
 });
