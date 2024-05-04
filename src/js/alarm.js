@@ -1,14 +1,24 @@
 async function fetchDisasterMsgData() {
-  const apiUrl = 'https://apis.data.go.kr/1741000/DisasterMsg4/getDisasterMsg2List?ServiceKey=NH02V8Rfyl%2Btjtb5j%2FBdZmtACdWOeGyQt4ZYl9%2BueaaPkMhwMptzV1bbDddk2LhjmlLBfzs5iDbvtTMFdiVVjQ%3D%3D&type=xml&pageNo=1&numOfRows=1000&location_name=%EC%84%9C%EC%9A%B8';
-  const proxyUrl = 'https://proxy.seoulshelter.info/';
-  const response = await fetch(proxyUrl + apiUrl);
-  const text = await response.text();
+  var xhr = new XMLHttpRequest();
+  var url = 'https://proxy.seoulshelter.info/http://apis.data.go.kr/1741000/DisasterMsg4/getDisasterMsg2List'; /*URL*/
+  var queryParams = '?' + encodeURIComponent('serviceKey') + '='+'NH02V8Rfyl%2Btjtb5j%2FBdZmtACdWOeGyQt4ZYl9%2BueaaPkMhwMptzV1bbDddk2LhjmlLBfzs5iDbvtTMFdiVVjQ%3D'; /*Service Key*/
+  queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /**/
+  queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /**/
+  queryParams += '&' + encodeURIComponent('type') + '=' + encodeURIComponent('xml'); /**/
+  queryParams += '&' + encodeURIComponent('location_name') + '=' + encodeURIComponent('서울'); /**/
+  xhr.open('GET', url + queryParams);
+  xhr.onreadystatechange = function () {
+    if (this.readyState == 4) {
+        console.log('Status: '+this.status+'nHeaders: '+JSON.stringify(this.getAllResponseHeaders())+'nBody: '+this.responseText);
+    }
+  };
+  xhr.send('');
+  const text = await xhr.responseText;
   const parser = new DOMParser();
   const xmlDoc = parser.parseFromString(text, "text/xml");
   const rows = Array.from(xmlDoc.querySelectorAll('row'));
   return rows.slice(0, 50);
 }
-let disasterMsgData = null;
 
 document.getElementById('alarm').addEventListener('click', async function() {
   var page = document.getElementById('page');
@@ -22,17 +32,16 @@ document.getElementById('alarm').addEventListener('click', async function() {
     page.classList.add('show');
 
     // 데이터가 없을 때만 API 요청을 보냅니다.
-    if (!disasterMsgData) {
-      disasterMsgData = await fetchDisasterMsgData().catch(error => {
-        console.error('Failed to fetch disaster message data:', error);
-      });
-    }
+    const disasterMsgData = await fetchDisasterMsgData().catch(error => {
+      console.error('Failed to fetch disaster message data:', error);
+    });
 
     // 페이지에 내용을 추가합니다.
     disasterMsgData.forEach(row => {
       const createDate = row.querySelector('create_date').textContent;
+      const msg = row.querySelector('msg').textContent;
       const p = document.createElement('p');
-      p.textContent = createDate;
+      p.textContent = `${createDate}: ${msg}`;
       page.appendChild(p);
     });
   }
