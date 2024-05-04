@@ -127,13 +127,13 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
     });
   });
 });
-async function showShelters(map, urls) {
+async function showShelters(map, urls, getCoordinates) {
   // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'block';
 
   const coordinates = [];
   for (const url of urls) {
-    const urlCoordinates = await getCoordinatesFromXY(url); 
+    const urlCoordinates = await getCoordinates(url);
     coordinates.push(...urlCoordinates);
   }
 
@@ -217,12 +217,7 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
       ];
-      const coordinates = [];
-      for (const url of urls) {
-        const urlCoordinates = await getCoordinatesFromXY(url);
-        coordinates.push(...urlCoordinates);
-      }
-      shelterMarkers = await showShelters(map, coordinates);
+      shelterMarkers = await showShelters(map, urls, getCoordinatesFromXY);
     }
 
     // 대피소 마커 보이기
@@ -246,8 +241,7 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     // 대피소 마커가 없다면 생성
     if (shelterMarkers.length === 0) {
       const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
-      const coordinates = await getCoordinatesFromAddress(url);
-      shelterMarkers = await showShelters(map, coordinates);
+      shelterMarkers = await showShelters(map, [url], getCoordinatesFromAddress);
     }
     // 대피소 마커 보이기
     shelterMarkers.forEach(marker => marker.setVisible(true));
