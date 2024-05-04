@@ -104,19 +104,17 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
 
-    // 마커 지우기
+    // 마커 숨기기
     markers.forEach(function(marker) {
-      marker.setMap(null);
+      marker.setVisible(false);
     });
-    markers = [];
 
     // 폴리곤 보이기
     polygons.forEach(function(polygon) {
       polygon.setVisible(true);
     });
-
   });
-})
+});
 async function showShelters(map, urls) {
   const HOME_PATH = '/images'; // 이미지 경로를 설정합니다.
   const coordinatesPromises = urls.map(url => getCoordinates(url));
@@ -183,7 +181,6 @@ async function showShelters(map, urls) {
     }
   });
 
-
 document.querySelectorAll('.shelter-button').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
@@ -198,10 +195,10 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
       'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
       'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
     ];
-    const markers = await showShelters(map, urls);
+    markers = await showShelters(map, urls); 
 
     // 마커 보이기
-    markers.forEach(marker => marker.setMap(map));
+    markers.forEach(marker => marker.setVisible(true)); 
   });
 })
 
