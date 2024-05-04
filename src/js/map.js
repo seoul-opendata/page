@@ -2,7 +2,7 @@ let map;
 var mapData;
 var proj4 = window.proj4;
 var HOME_PATH = 'https://seoulshelter.info';
-let markers = [];
+let shelterMarkers = [];
 let polygons = []; 
 let rainfallData = {}; // 전역 변수로 선언
 var isShelterButtonClicked = false; 
@@ -100,12 +100,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
   });
 });
+
 document.querySelectorAll('.flood-risk-button').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
 
-    // 마커 숨기기
-    markers.forEach(function(marker) {
+    // 대피소 마커 숨기기
+    shelterMarkers.forEach(function(marker) {
       marker.setVisible(false);
     });
 
@@ -167,19 +168,20 @@ async function showShelters(map, urls) {
     size: new naver.maps.Size(40, 40),
     anchor: new naver.maps.Point(20, 20)
   };
-  const markerClustering = new MarkerClustering({
-    minClusterSize: 2,
-    maxZoom: 14,
-    map: map,
-    markers: markers,
-    disableClickZoom: false,
-    gridSize: 120,
-    icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
-    indexGenerator: [10, 100, 200, 500, 1000],
-    stylingFunction: function(clusterMarker, count) {
-      $(clusterMarker.getElement()).find('div:first-child').text(count);
-    }
-  });
+
+const markerClustering = new MarkerClustering({
+  minClusterSize: 2,
+  maxZoom: 14,
+  map: map,
+  markers: shelterMarkers, // markers 대신 shelterMarkers를 사용합니다.
+  disableClickZoom: false,
+  gridSize: 120,
+  icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+  indexGenerator: [10, 100, 200, 500, 1000],
+  stylingFunction: function(clusterMarker, count) {
+    $(clusterMarker.getElement()).find('div:first-child').text(count);
+  }
+});
 
 document.querySelectorAll('.shelter-button').forEach((element) => {
   element.addEventListener('click', async function(e) {
@@ -195,12 +197,12 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
       'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
       'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
     ];
-    markers = await showShelters(map, urls); 
+    shelterMarkers = await showShelters(map, urls); // 대피소 마커를 별도의 변수에 저장합니다.
 
-    // 마커 보이기
-    markers.forEach(marker => marker.setVisible(true)); 
+    // 대피소 마커 보이기
+    shelterMarkers.forEach(marker => marker.setVisible(true));
   });
-})
+});
 
 async function startDataLayer(geojson) {
   try {
