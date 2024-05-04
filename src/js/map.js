@@ -304,44 +304,47 @@ async function getCoordinatesFromAddress(url) {
       throw new Error('ADR_NAM tag not found in the row element.');
     }
     const address = addressElement.textContent;
+    console.log(`ADR_NAM: ${address}`); // ADR_NAM 값을 콘솔에 출력
     return address;
   });
 
-  const coordinatePromises = addresses.map((address) => {
-    return new Promise((resolve, reject) => {
-      if (!address) {
-        console.error('Address is undefined or empty.');
+const coordinatePromises = addresses.map((address) => {
+  return new Promise((resolve, reject) => {
+    if (!address) {
+      console.error('Address is undefined or empty.');
+      reject(`Failed to get coordinates from address: ${address}`);
+      return;
+    }
+
+    naver.maps.Service.geocode({
+      query: address
+    }, function(status, response) {
+      if (status === naver.maps.Service.Status.ERROR) {
+        console.error('Something went wrong:', response.error);
         reject(`Failed to get coordinates from address: ${address}`);
         return;
       }
 
-      naver.maps.Service.geocode({
-        query: address
-      }, function(status, response) {
-        if (status === naver.maps.Service.Status.ERROR) {
-          console.error('Something went wrong:', response.error);
-          reject(`Failed to get coordinates from address: ${address}`);
-          return;
-        }
+      console.log(`Geocoding response for ${address}:`, response); // 응답을 콘솔에 출력
 
-        if (!response.result.items) {
-          console.error('No items in the response:', response);
-          reject(`Failed to get coordinates from address: ${address}`);
-          return;
-        }
+      if (!response.result.items) {
+        console.error('No items in the response:', response);
+        reject(`Failed to get coordinates from address: ${address}`);
+        return;
+      }
 
-        const { x, y } = response.result.items[0].point;
-        const latLng = new naver.maps.LatLng(y, x);
-        console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
-        resolve(latLng);
-      });
-    }).catch(error => {
-      console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
+      const { x, y } = response.result.items[0].point;
+      const latLng = new naver.maps.LatLng(y, x);
+      console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
+      resolve(latLng);
     });
+  }).catch(error => {
+    console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
   });
+});
 
-  const coordinates = await Promise.all(coordinatePromises);
-  return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
+const coordinates = await Promise.all(coordinatePromises);
+return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
 }
 async function startDataLayer(geojson) {
   try {
