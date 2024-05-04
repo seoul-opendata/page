@@ -318,30 +318,21 @@ async function getCoordinatesFromAddress(url) {
       reject(`Failed to get coordinates from address: ${address}`);
       return;
     }
-
-    naver.maps.Service.places.search({
-      query: address,
-      callback: function(status, response) {
-        if (status !== naver.maps.Service.Status.OK) {
-          console.error('Something went wrong:', response.error);
-          reject(`Failed to get coordinates from address: ${address}`);
+    naver.maps.Service.geocode({
+      query: '불정로 6'
+  }, function(status, response) {
+      if (status !== naver.maps.Service.Status.OK) {
+          console.error('Something wrong!');
           return;
-        }
-
-        console.log(`Places response for ${address}:`, response); // 응답을 콘솔에 출력
-
-        if (!response.items || !response.items.length || !response.items[0].point) {
-          console.error('No point in the response:', response);
-          reject(`Failed to get coordinates from address: ${address}`);
-          return;
-        }
-
-        const { x, y } = response.items[0].point;
-        const latLng = new naver.maps.LatLng(y, x);
-        console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
-        resolve(latLng);
       }
-    });
+  
+      var result = response.v2, // 검색 결과의 컨테이너
+          items = result.addresses; // 검색 결과의 배열
+  
+      items.forEach(item => {
+          console.log(`Address: ${item.roadAddress}, Coordinates: ${item.x}, ${item.y}`);
+      });
+  });
   }).catch(error => {
     console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
   });
