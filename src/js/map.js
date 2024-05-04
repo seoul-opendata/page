@@ -218,10 +218,10 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 'shelter-button-2' 마커 숨기기
-    if (isShelter2Visible) {
-      shelterMarkers2.forEach(marker => marker.setVisible(false));
-      isShelter2Visible = false;
+    // 'shelter-button-2' 마커와 클러스터링 숨기기
+    if (markerClustering) {
+      markerClustering.setMap(null);
+      markerClustering = null;
     }
 
     // 새로운 마커 생성
@@ -233,9 +233,8 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
       shelterMarkers1 = await showShelters(map, urls, false);
     }
 
-    // 새로운 마커 보이기 또는 숨기기
-    isShelter1Visible = !isShelter1Visible;
-    shelterMarkers1.forEach(marker => marker.setVisible(isShelter1Visible));
+    // 새로운 마커 보이기
+    shelterMarkers1.forEach(marker => marker.setVisible(true));
   });
 });
 
@@ -248,10 +247,10 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 'shelter-button-1' 마커 숨기기
-    if (isShelter1Visible) {
-      shelterMarkers1.forEach(marker => marker.setVisible(false));
-      isShelter1Visible = false;
+    // 'shelter-button-1' 마커와 클러스터링 숨기기
+    if (markerClustering) {
+      markerClustering.setMap(null);
+      markerClustering = null;
     }
 
     // 새로운 마커 생성
@@ -260,9 +259,8 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       shelterMarkers2 = await showShelters(map, [url], true);
     }
 
-    // 새로운 마커 보이기 또는 숨기기
-    isShelter2Visible = !isShelter2Visible;
-    shelterMarkers2.forEach(marker => marker.setVisible(isShelter2Visible));
+    // 새로운 마커 보이기
+    shelterMarkers2.forEach(marker => marker.setVisible(true));
   });
 });
 
