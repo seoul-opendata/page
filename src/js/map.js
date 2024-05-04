@@ -230,7 +230,7 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
 });
 
 document.querySelectorAll('.shelter-button-2').forEach((element) => {
-  element.addEventListener('click', function(e) {
+  element.addEventListener('click', async function(e) {
     e.preventDefault();
 
     // 폴리곤 숨기기
@@ -238,22 +238,19 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // '불정로 6' 주소에 대한 좌표를 얻는 테스트를 수행합니다.
-    naver.maps.Service.geocode({
-      query: '불정로 6'
-    }, function(status, response) {
-      if (status !== naver.maps.Service.Status.OK) {
-        console.error('Something wrong!');
-        return;
-      }
+    // 대피소 마커가 없다면 생성
+    if (shelterMarkers.length === 0) {
+      const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
+      shelterMarkers = await showShelters(map, [url], true);
+    }
 
-      var result = response.v2, // 검색 결과의 컨테이너
-          items = result.addresses; // 검색 결과의 배열
+    // 대피소 마커 보이기
+    shelterMarkers.forEach(marker => marker.setVisible(true));
 
-      items.forEach(item => {
-        console.log(`Address: ${item.roadAddress}, Coordinates: ${item.x}, ${item.y}`);
-      });
-    });
+    // 클러스터 보이기
+    if (markerClustering) {
+      markerClustering.setMap(map);
+    }
   });
 });
 
@@ -318,20 +315,24 @@ async function getCoordinatesFromAddress(url) {
       reject(`Failed to get coordinates from address: ${address}`);
       return;
     }
-    naver.maps.Service.geocode({
-      query: '불정로 6'
+  naver.maps.Service.geocode({
+    query: address
   }, function(status, response) {
-      if (status !== naver.maps.Service.Status.OK) {
-          console.error('Something wrong!');
-          return;
-      }
-  
-      var result = response.v2, // 검색 결과의 컨테이너
-          items = result.addresses; // 검색 결과의 배열
-  
-      items.forEach(item => {
-          console.log(`Address: ${item.roadAddress}, Coordinates: ${item.x}, ${item.y}`);
-      });
+    if (status !== naver.maps.Service.Status.OK) {
+      console.error('Something wrong:', response.error);
+      reject(`Failed to get coordinates from address: ${address}`);
+      return;
+    }
+
+    if (!response.v2.addresses || !response.v2.addresses.length) {
+      console.error('No addresses in the response:', response);
+      reject(`Failed to get coordinates from address: ${address}`);
+      return;
+    }
+
+    const { x, y } = response.v2.addresses[0];
+    const latLng = new naver.maps.LatLng(y, x);
+    resolve(latLng);
   });
   }).catch(error => {
     console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
