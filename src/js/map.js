@@ -307,26 +307,23 @@ async function getCoordinatesFromAddress(url) {
     return address;
   });
 
-  const coordinatePromises = addresses.map(async (address) => {
-    try {
-      const geocodeUrl = `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`;
-      const proxyGeocodeUrl = `https://proxy.seoulshelter.info/${geocodeUrl}`;
-      const geocodeResponse = await fetch(proxyGeocodeUrl, {
-        headers: {
-          'X-NCP-APIGW-API-KEY-ID': '4qd9nt8f83',
-          'X-NCP-APIGW-API-KEY': 'RL8V8aTvon2oIown9JuRE8erc6yCHM9J9rKBdxls'
+  const coordinatePromises = addresses.map((address) => {
+    return new Promise((resolve, reject) => {
+      naver.maps.Service.geocode({
+        query: address
+      }, function(status, response) {
+        if (status === naver.maps.Service.Status.ERROR) {
+          console.error('Something went wrong:', response.error);
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
         }
-      });
-      const geocodeData = await geocodeResponse.json();
-      if (geocodeData.status === 'OK' && geocodeData.meta.totalCount > 0) {
-        const { x, y } = geocodeData.addresses[0].jibunAddress;
+
+        const { x, y } = response.result.items[0].point;
         const latLng = new naver.maps.LatLng(y, x);
         console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
-        return latLng;
-      }
-    } catch (error) {
-      console.error(`Failed to get coordinates from address: ${address}`);
-    }
+        resolve(latLng);
+      });
+    });
   });
 
   const coordinates = await Promise.all(coordinatePromises);
