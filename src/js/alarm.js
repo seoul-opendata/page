@@ -1,9 +1,9 @@
 async function fetchDisasterMsgData() {
   var xhr = new XMLHttpRequest();
   var url = 'https://proxy.seoulshelter.info/http://apis.data.go.kr/1741000/DisasterMsg4/getDisasterMsg2List'; /*URL*/
-  var queryParams = '?' + encodeURIComponent('serviceKey') + '='+'NH02V8Rfyl%2Btjtb5j%2FBdZmtACdWOeGyQt4ZYl9%2BueaaPkMhwMptzV1bbDddk2LhjmlLBfzs5iDbvtTMFdiVVjQ%3D'; /*Service Key*/
+  var queryParams = '?' + encodeURIComponent('serviceKey') + '='+'NH02V8Rfyl%2Btjtb5j%2FBdZmtACdWOeGyQt4ZYl9%2BueaaPkMhwMptzV1bbDddk2LhjmlLBfzs5iDbvtTMFdiVVjQ%3D%3D'; /*Service Key*/
   queryParams += '&' + encodeURIComponent('pageNo') + '=' + encodeURIComponent('1'); /**/
-  queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('100'); /**/
+  queryParams += '&' + encodeURIComponent('numOfRows') + '=' + encodeURIComponent('50'); /**/
   queryParams += '&' + encodeURIComponent('type') + '=' + encodeURIComponent('xml'); /**/
   queryParams += '&' + encodeURIComponent('location_name') + '=' + encodeURIComponent('서울'); /**/
   xhr.open('GET', url + queryParams);
