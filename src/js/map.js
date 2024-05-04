@@ -124,7 +124,7 @@ async function showShelters(map, urls) {
   const coordinates = coordinatesArrays.flat();
 
   const markers = coordinates.map(coordinate => {
-    return new naver.maps.Marker({
+    const marker = new naver.maps.Marker({
       map: map,
       icon: {
           content: [
@@ -135,7 +135,13 @@ async function showShelters(map, urls) {
       },
       position: coordinate
     });
+    marker.setMap(null); // 마커를 생성하자마자 숨깁니다.
+    return marker;
   });
+
+  // 마커 배열을 반환합니다.
+  return markers;
+}
 
   // 클러스터 마커 아이콘을 정의합니다.
   const htmlMarker1 = {
