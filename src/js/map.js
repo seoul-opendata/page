@@ -308,18 +308,22 @@ async function getCoordinatesFromAddress(url) {
 
   const coordinates = [];
   for (const address of addresses) {
-    const geocodeUrl = `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`;
-    const proxyGeocodeUrl = `https://proxy.seoulshelter.info/${geocodeUrl}`;
-    const geocodeResponse = await fetch(proxyGeocodeUrl, {
-      headers: {
-        'X-NCP-APIGW-API-KEY-ID': '4qd9nt8f83',
-        'X-NCP-APIGW-API-KEY': 'RL8V8aTvon2oIown9JuRE8erc6yCHM9J9rKBdxls'
+    try {
+      const geocodeUrl = `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`;
+      const proxyGeocodeUrl = `https://proxy.seoulshelter.info/${geocodeUrl}`;
+      const geocodeResponse = await fetch(proxyGeocodeUrl, {
+        headers: {
+          'X-NCP-APIGW-API-KEY-ID': '4qd9nt8f83',
+          'X-NCP-APIGW-API-KEY': 'RL8V8aTvon2oIown9JuRE8erc6yCHM9J9rKBdxls'
+        }
+      });
+      const geocodeData = await geocodeResponse.json();
+      if (geocodeData.status === 'OK' && geocodeData.meta.totalCount > 0) {
+        const { x, y } = geocodeData.addresses[0].jibunAddress;
+        coordinates.push(new naver.maps.LatLng(y, x));
       }
-    });
-    const geocodeData = await geocodeResponse.json();
-    if (geocodeData.status === 'OK' && geocodeData.meta.totalCount > 0) {
-      const { x, y } = geocodeData.addresses[0].jibunAddress;
-      coordinates.push(new naver.maps.LatLng(y, x));
+    } catch (error) {
+      console.error(`Failed to get coordinates from address: ${address}`);
     }
   }
   return coordinates;
