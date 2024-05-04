@@ -235,7 +235,6 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
       }
     });
 
-    console.log(shelterMarkers1);
   });
 });
 
@@ -280,7 +279,6 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       }
     });
 
-    console.log(shelterMarkers2);
   });
 });
 
