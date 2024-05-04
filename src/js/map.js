@@ -309,11 +309,23 @@ async function getCoordinatesFromAddress(url) {
 
   const coordinatePromises = addresses.map((address) => {
     return new Promise((resolve, reject) => {
+      if (!address) {
+        console.error('Address is undefined or empty.');
+        reject(`Failed to get coordinates from address: ${address}`);
+        return;
+      }
+
       naver.maps.Service.geocode({
         query: address
       }, function(status, response) {
         if (status === naver.maps.Service.Status.ERROR) {
           console.error('Something went wrong:', response.error);
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
+        if (!response.result.items) {
+          console.error('No items in the response:', response);
           reject(`Failed to get coordinates from address: ${address}`);
           return;
         }
