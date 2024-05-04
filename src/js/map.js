@@ -212,9 +212,6 @@ const htmlMarker5 = {
   anchor: new naver.maps.Point(20, 20)
 };
 
-let isShelter1Visible = false;
-let isShelter2Visible = false;
-
 document.querySelectorAll('.shelter-button-1').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
@@ -228,10 +225,6 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
     shelterMarkers2.forEach(function(marker) {
       marker.setVisible(false);
     });
-    if (markerClustering) {
-      markerClustering.setMap(null);
-      markerClustering = null;
-    }
 
     // 새로운 마커 생성
     if (shelterMarkers1.length === 0) {
@@ -242,8 +235,12 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
       shelterMarkers1 = await showShelters(map, urls, false);
     }
 
-    // 새로운 마커 보이기
     shelterMarkers1.forEach(marker => marker.setVisible(true));
+    // 클러스터링 객체의 마커를 업데이트
+    if (markerClustering) {
+      markerClustering.setMarkers(shelterMarkers1);
+    }
+    console.log(shelterMarkers1);
   });
 });
 
@@ -260,10 +257,6 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     shelterMarkers1.forEach(function(marker) {
       marker.setVisible(false);
     });
-    if (markerClustering) {
-      markerClustering.setMap(null);
-      markerClustering = null;
-    }
 
     // 새로운 마커 생성
     if (shelterMarkers2.length === 0) {
@@ -271,8 +264,11 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       shelterMarkers2 = await showShelters(map, [url], true);
     }
 
-    // 새로운 마커 보이기
     shelterMarkers2.forEach(marker => marker.setVisible(true));
+    if (markerClustering) {
+      markerClustering.setMarkers(shelterMarkers2);
+    }
+    console.log(shelterMarkers2);
   });
 });
 
