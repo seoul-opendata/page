@@ -22,9 +22,9 @@ document.getElementById('alarm').addEventListener('click', async function() {
     // 페이지에 내용을 추가합니다.
     rows.forEach(row => {
       const createDate = row.querySelector('create_date').textContent;
-      const locationName = row.querySelector('location_name').textContent;
-      const msg = row.querySelector('msg').textContent;
-      page.innerHTML += `<p>${createDate} ${locationName} ${msg}</p>`;
+      const p = document.createElement('p');
+      p.textContent = createDate;
+      page.appendChild(p);
     });
   } else {
     page.classList.add('opacity-0');
