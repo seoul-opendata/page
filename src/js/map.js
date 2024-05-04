@@ -64,41 +64,35 @@ function loadGeoJson() {
 }
 async function initMap() {
   if (!map) {
+    // 서울시청을 기준으로 지도를 생성합니다.
+    map = new naver.maps.Map(document.getElementById("map"), {
+      zoom: 12,
+      mapTypeId: "normal",
+      center: new naver.maps.LatLng(37.5665, 126.978),
+    });
+
+    // 강수량 데이터를 불러옵니다.
+    rainfallData = await fetchRainfallData();
+    // 강수량 데이터가 불러와진 후에 폴리곤을 로드합니다.
+    await loadGeoJson();
+  }
+}
+document.addEventListener('DOMContentLoaded', (event) => {
+  document.querySelector('.my-position').addEventListener('click', async function() {
     // 사용자의 위치 정보를 얻습니다.
     navigator.geolocation.getCurrentPosition(async function(position) {
       // 사용자의 위도와 경도를 얻습니다.
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
 
-      // 사용자의 위치를 기준으로 지도를 생성합니다.
-      map = new naver.maps.Map(document.getElementById("map"), {
-        zoom: 12,
-        mapTypeId: "normal",
-        center: new naver.maps.LatLng(lat, lng),
-      });
-
-      // 강수량 데이터를 불러옵니다.
-      rainfallData = await fetchRainfallData();
-      // 강수량 데이터가 불러와진 후에 폴리곤을 로드합니다.
-      await loadGeoJson();
-    }, async function(error) {
+      // 사용자의 위치를 기준으로 지도의 중심을 이동합니다.
+      map.setCenter(new naver.maps.LatLng(lat, lng));
+    }, function(error) {
       // 사용자가 위치 정보를 제공하지 않았거나, 다른 오류가 발생한 경우
       console.error(`Failed to get user's location: ${error}`);
-
-      // 서울시청을 기준으로 지도를 생성합니다.
-      map = new naver.maps.Map(document.getElementById("map"), {
-        zoom: 12,
-        mapTypeId: "normal",
-        center: new naver.maps.LatLng(37.5665, 126.978),
-      });
-
-      // 강수량 데이터를 불러옵니다.
-      rainfallData = await fetchRainfallData();
-      // 강수량 데이터가 불러와진 후에 폴리곤을 로드합니다.
-      await loadGeoJson();
     });
-  }
-}
+  });
+});
 document.querySelectorAll('.flood-risk-button').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
