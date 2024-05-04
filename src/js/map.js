@@ -131,7 +131,11 @@ async function showShelters(map, url) {
   // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'block';
 
-  const coordinates = await getCoordinatesFromAddress(url);
+  const coordinates = [];
+  for (const url of urls) {
+    const urlCoordinates = await getCoordinatesFromAddress(url);
+    coordinates.push(...urlCoordinates);
+  }
 
   const markers = coordinates.map(coordinate => {
     const marker = new naver.maps.Marker({
@@ -213,7 +217,12 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
       ];
-      shelterMarkers = await showShelters(map, urls);
+      const coordinates = [];
+      for (const url of urls) {
+        const urlCoordinates = await getCoordinatesFromXY(url);
+        coordinates.push(...urlCoordinates);
+      }
+      shelterMarkers = await showShelters(map, coordinates);
     }
 
     // 대피소 마커 보이기
@@ -240,7 +249,6 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       const coordinates = await getCoordinatesFromAddress(url);
       shelterMarkers = await showShelters(map, coordinates);
     }
-
     // 대피소 마커 보이기
     shelterMarkers.forEach(marker => marker.setVisible(true));
 
@@ -250,6 +258,36 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     }
   });
 });
+
+async function getCoordinatesFromXY(url) {
+  const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
+  const response = await fetch(proxyUrl, {
+    headers: {
+      'origin': window.location.origin,
+      'x-requested-with': 'XMLHttpRequest'
+    }
+  });
+  const xmlText = await response.text();
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+  const rowElements = xmlDoc.getElementsByTagName('row');
+  if (!rowElements.length) {
+    console.error(`No row tag found in the XML document for URL: ${url}`);
+    return [];
+  }
+  const coordinates = Array.from(rowElements).map(rowElement => {
+    const xElement = rowElement.getElementsByTagName('XCORD')[0];
+    const yElement = rowElement.getElementsByTagName('YCORD')[0];
+    if (!xElement || !yElement) {
+      throw new Error('XCORD or YCORD tag not found in the row element.');
+    }
+    const x = parseFloat(xElement.textContent);
+    const y = parseFloat(yElement.textContent);
+    return new naver.maps.LatLng(y, x);
+  });
+  return coordinates;
+}
+
 
 async function getCoordinatesFromAddress(url) {
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
@@ -264,7 +302,8 @@ async function getCoordinatesFromAddress(url) {
   const xmlDoc = parser.parseFromString(xmlText, "text/xml");
   const rowElements = xmlDoc.getElementsByTagName('row');
   if (!rowElements.length) {
-    throw new Error('row tag not found in the XML document.');
+    console.error(`No row tag found in the XML document for URL: ${url}`);
+    return [];
   }
   const addresses = Array.from(rowElements).map(rowElement => {
     const addressElement = rowElement.getElementsByTagName('ADR_NAM')[0];
