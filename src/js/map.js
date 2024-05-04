@@ -304,7 +304,6 @@ async function getCoordinatesFromAddress(url) {
       throw new Error('ADR_NAM tag not found in the row element.');
     }
     const address = addressElement.textContent;
-    console.log(`ADR_NAM: ${address}`); // ADR_NAM 값을 콘솔에 출력
     return address;
   });
 
@@ -327,13 +326,13 @@ const coordinatePromises = addresses.map((address) => {
 
       console.log(`Geocoding response for ${address}:`, response); // 응답을 콘솔에 출력
 
-      if (!response.result.items) {
-        console.error('No items in the response:', response);
+      if (!response.v2.addresses || !response.v2.addresses.length || !response.v2.addresses[0].point) {
+        console.error('No point in the response:', response);
         reject(`Failed to get coordinates from address: ${address}`);
         return;
       }
 
-      const { x, y } = response.result.items[0].point;
+      const { x, y } = response.v2.addresses[0].point;
       const latLng = new naver.maps.LatLng(y, x);
       console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
       resolve(latLng);
