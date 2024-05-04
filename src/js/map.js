@@ -309,6 +309,12 @@ async function getCoordinatesFromAddress(url) {
 
   const coordinatePromises = addresses.map((address) => {
     return new Promise((resolve, reject) => {
+      if (!address) {
+        console.error('Address is undefined or empty.');
+        reject(`Failed to get coordinates from address: ${address}`);
+        return;
+      }
+
       naver.maps.Service.geocode({
         query: address
       }, function(status, response) {
@@ -318,18 +324,25 @@ async function getCoordinatesFromAddress(url) {
           return;
         }
 
+        if (!response.result.items) {
+          console.error('No items in the response:', response);
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
         const { x, y } = response.result.items[0].point;
         const latLng = new naver.maps.LatLng(y, x);
         console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
         resolve(latLng);
       });
+    }).catch(error => {
+      console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
     });
   });
 
   const coordinates = await Promise.all(coordinatePromises);
   return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
 }
-
 async function startDataLayer(geojson) {
   try {
     // 좌표 변환
