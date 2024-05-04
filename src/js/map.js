@@ -198,9 +198,13 @@ document.querySelectorAll('.shelter-button').forEach((element) => {
       'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
       'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
     ];
-    showShelters(map, urls);
+    const markers = await showShelters(map, urls);
+
+    // 마커 보이기
+    markers.forEach(marker => marker.setMap(map));
   });
 })
+
 async function startDataLayer(geojson) {
   try {
     // 좌표 변환
