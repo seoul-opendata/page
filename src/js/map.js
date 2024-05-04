@@ -230,7 +230,7 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
 });
 
 document.querySelectorAll('.shelter-button-2').forEach((element) => {
-  element.addEventListener('click', async function(e) {
+  element.addEventListener('click', function(e) {
     e.preventDefault();
 
     // 폴리곤 숨기기
@@ -238,19 +238,22 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 대피소 마커가 없다면 생성
-    if (shelterMarkers.length === 0) {
-      const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
-      shelterMarkers = await showShelters(map, [url], true);
-    }
+    // '불정로 6' 주소에 대한 좌표를 얻는 테스트를 수행합니다.
+    naver.maps.Service.geocode({
+      query: '불정로 6'
+    }, function(status, response) {
+      if (status !== naver.maps.Service.Status.OK) {
+        console.error('Something wrong!');
+        return;
+      }
 
-    // 대피소 마커 보이기
-    shelterMarkers.forEach(marker => marker.setVisible(true));
+      var result = response.v2, // 검색 결과의 컨테이너
+          items = result.addresses; // 검색 결과의 배열
 
-    // 클러스터 보이기
-    if (markerClustering) {
-      markerClustering.setMap(map);
-    }
+      items.forEach(item => {
+        console.log(`Address: ${item.roadAddress}, Coordinates: ${item.x}, ${item.y}`);
+      });
+    });
   });
 });
 
