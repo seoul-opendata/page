@@ -2,7 +2,8 @@ let map;
 var mapData;
 var proj4 = window.proj4;
 var HOME_PATH = 'https://seoulshelter.info';
-let shelterMarkers = [];
+let shelterMarkers1 = [];
+let shelterMarkers2 = [];
 let polygons = [];
 let markerClustering;
 let rainfallData = {}; // 전역 변수로 선언
@@ -211,22 +212,23 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
     });
 
     // 기존 마커와 클러스터링 제거
-    shelterMarkers.forEach(marker => marker.setMap(null));
-    shelterMarkers = [];
+    shelterMarkers2.forEach(marker => marker.setVisible(false));
     if (markerClustering) {
       markerClustering.setMap(null);
       markerClustering = null;
     }
 
     // 새로운 마커 생성
-    const urls = [
-      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
-      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
-    ];
-    shelterMarkers = await showShelters(map, urls, false);
+    if (shelterMarkers1.length === 0) {
+      const urls = [
+        'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
+        'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
+      ];
+      shelterMarkers1 = await showShelters(map, urls, false);
+    }
 
     // 새로운 마커 보이기
-    shelterMarkers.forEach(marker => marker.setVisible(true));
+    shelterMarkers1.forEach(marker => marker.setVisible(true));
 
     // 클러스터 보이기
     if (markerClustering) {
@@ -245,19 +247,20 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     });
 
     // 기존 마커와 클러스터링 제거
-    shelterMarkers.forEach(marker => marker.setMap(null));
-    shelterMarkers = [];
+    shelterMarkers1.forEach(marker => marker.setVisible(false));
     if (markerClustering) {
       markerClustering.setMap(null);
       markerClustering = null;
     }
 
     // 새로운 마커 생성
-    const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
-    shelterMarkers = await showShelters(map, [url], true);
+    if (shelterMarkers2.length === 0) {
+      const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
+      shelterMarkers2 = await showShelters(map, [url], true);
+    }
 
     // 새로운 마커 보이기
-    shelterMarkers.forEach(marker => marker.setVisible(true));
+    shelterMarkers2.forEach(marker => marker.setVisible(true));
 
     // 클러스터 보이기
     if (markerClustering) {
