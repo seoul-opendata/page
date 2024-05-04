@@ -210,16 +210,22 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 대피소 마커가 없다면 생성
-    if (shelterMarkers.length === 0) {
-      const urls = [
-        'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
-        'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
-      ];
-      shelterMarkers = await showShelters(map, urls, false);
+    // 기존 마커와 클러스터링 제거
+    shelterMarkers.forEach(marker => marker.setMap(null));
+    shelterMarkers = [];
+    if (markerClustering) {
+      markerClustering.setMap(null);
+      markerClustering = null;
     }
 
-    // 대피소 마커 보이기
+    // 새로운 마커 생성
+    const urls = [
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
+      'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
+    ];
+    shelterMarkers = await showShelters(map, urls, false);
+
+    // 새로운 마커 보이기
     shelterMarkers.forEach(marker => marker.setVisible(true));
 
     // 클러스터 보이기
@@ -238,13 +244,19 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 대피소 마커가 없다면 생성
-    if (shelterMarkers.length === 0) {
-      const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
-      shelterMarkers = await showShelters(map, [url], true);
+    // 기존 마커와 클러스터링 제거
+    shelterMarkers.forEach(marker => marker.setMap(null));
+    shelterMarkers = [];
+    if (markerClustering) {
+      markerClustering.setMap(null);
+      markerClustering = null;
     }
 
-    // 대피소 마커 보이기
+    // 새로운 마커 생성
+    const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
+    shelterMarkers = await showShelters(map, [url], true);
+
+    // 새로운 마커 보이기
     shelterMarkers.forEach(marker => marker.setVisible(true));
 
     // 클러스터 보이기
