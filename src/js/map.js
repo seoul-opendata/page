@@ -127,12 +127,11 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
     });
   });
 });
-async function showShelters(map, urls) {
+async function showShelters(map, url) {
   // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'block';
-  const coordinatesPromises = urls.map(url => getCoordinates(url));
-  const coordinatesArrays = await Promise.all(coordinatesPromises);
-  const coordinates = coordinatesArrays.flat();
+
+  const coordinates = await getCoordinatesFromAddress(url);
 
   const markers = coordinates.map(coordinate => {
     const marker = new naver.maps.Marker({
@@ -226,7 +225,72 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
     }
   });
 });
+document.querySelectorAll('.shelter-button-2').forEach((element) => {
+  element.addEventListener('click', async function(e) {
+    e.preventDefault();
 
+    // 폴리곤 숨기기
+    polygons.forEach(function(polygon) {
+      polygon.setVisible(false);
+    });
+
+    // 대피소 마커가 없다면 생성
+    if (shelterMarkers.length === 0) {
+      const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
+      const coordinates = await getCoordinatesFromAddress(url);
+      shelterMarkers = await showShelters(map, coordinates);
+    }
+
+    // 대피소 마커 보이기
+    shelterMarkers.forEach(marker => marker.setVisible(true));
+
+    // 클러스터 보이기
+    if (markerClustering) {
+      markerClustering.setMap(map);
+    }
+  });
+});
+
+async function getCoordinatesFromAddress(url) {
+  const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
+  const response = await fetch(proxyUrl, {
+    headers: {
+      'origin': window.location.origin,
+      'x-requested-with': 'XMLHttpRequest'
+    }
+  });
+  const xmlText = await response.text();
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+  const rowElements = xmlDoc.getElementsByTagName('row');
+  if (!rowElements.length) {
+    throw new Error('row tag not found in the XML document.');
+  }
+  const addresses = Array.from(rowElements).map(rowElement => {
+    const addressElement = rowElement.getElementsByTagName('ADR_NAM')[0];
+    if (!addressElement) {
+      throw new Error('ADR_NAM tag not found in the row element.');
+    }
+    return addressElement.textContent;
+  });
+
+  const coordinates = [];
+  for (const address of addresses) {
+    const geocodeUrl = `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`;
+    const geocodeResponse = await fetch(geocodeUrl, {
+      headers: {
+        'X-NCP-APIGW-API-KEY-ID': '4qd9nt8f83',
+        'X-NCP-APIGW-API-KEY': 'RL8V8aTvon2oIown9JuRE8erc6yCHM9J9rKBdxls'
+      }
+    });
+    const geocodeData = await geocodeResponse.json();
+    if (geocodeData.status === 'OK' && geocodeData.meta.totalCount > 0) {
+      const { x, y } = geocodeData.addresses[0].jibunAddress;
+      coordinates.push(new naver.maps.LatLng(y, x));
+    }
+  }
+  return coordinates;
+}
 async function startDataLayer(geojson) {
   try {
     // 좌표 변환
@@ -300,31 +364,5 @@ async function startDataLayer(geojson) {
   } catch (error) {
     console.error(`Failed to start data layer: ${error}`);
   }
-}
-
-async function getCoordinates(url) {
-  const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
-  const response = await fetch(proxyUrl, {
-    headers: {
-      'origin': window.location.origin,
-      'x-requested-with': 'XMLHttpRequest'
-    }
-  });
-  const xmlText = await response.text();
-  const parser = new DOMParser();
-  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-  const rowElements = xmlDoc.getElementsByTagName('row');
-  if (!rowElements.length) {
-    throw new Error('row tag not found in the XML document.');
-  }
-  const coordinates = Array.from(rowElements).map(rowElement => {
-    const lonElement = rowElement.getElementsByTagName('XCORD')[0];
-    const latElement = rowElement.getElementsByTagName('YCORD')[0];
-    if (!lonElement || !latElement) {
-      throw new Error('XCORD or YCORD tag not found in the row element.');
-    }
-    return new naver.maps.LatLng(parseFloat(latElement.textContent), parseFloat(lonElement.textContent));
-  });
-  return coordinates;
 }
 
