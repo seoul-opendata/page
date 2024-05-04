@@ -127,13 +127,13 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
     });
   });
 });
-async function showShelters(map, urls, getCoordinates) {
+async function showShelters(map, urls, isAddress) {
   // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'block';
 
   const coordinates = [];
   for (const url of urls) {
-    const urlCoordinates = await getCoordinates(url);
+    const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
     coordinates.push(...urlCoordinates);
   }
 
@@ -174,7 +174,6 @@ async function showShelters(map, urls, getCoordinates) {
   // 마커 배열을 반환합니다.
   return markers;
 }
-
 // 클러스터 마커 아이콘을 정의합니다.
 const htmlMarker1 = {
   content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-1.png);background-size:contain;"></div>',
@@ -217,7 +216,7 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1/1000',
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
       ];
-      shelterMarkers = await showShelters(map, urls, getCoordinatesFromXY);
+      shelterMarkers = await showShelters(map, urls, false);
     }
 
     // 대피소 마커 보이기
@@ -229,6 +228,7 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
     }
   });
 });
+
 document.querySelectorAll('.shelter-button-2').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
@@ -241,8 +241,9 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     // 대피소 마커가 없다면 생성
     if (shelterMarkers.length === 0) {
       const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
-      shelterMarkers = await showShelters(map, [url], getCoordinatesFromAddress);
+      shelterMarkers = await showShelters(map, [url], true);
     }
+
     // 대피소 마커 보이기
     shelterMarkers.forEach(marker => marker.setVisible(true));
 
@@ -307,7 +308,7 @@ async function getCoordinatesFromAddress(url) {
     return address;
   });
 
-const coordinatePromises = addresses.map((address) => {
+  const coordinatePromises = addresses.map((address) => {
   return new Promise((resolve, reject) => {
     if (!address) {
       console.error('Address is undefined or empty.');
@@ -315,27 +316,28 @@ const coordinatePromises = addresses.map((address) => {
       return;
     }
 
-    naver.maps.Service.geocode({
-      query: address
-    }, function(status, response) {
-      if (status === naver.maps.Service.Status.ERROR) {
-        console.error('Something went wrong:', response.error);
-        reject(`Failed to get coordinates from address: ${address}`);
-        return;
+    naver.maps.Service.places.search({
+      query: address,
+      callback: function(status, response) {
+        if (status !== naver.maps.Service.Status.OK) {
+          console.error('Something went wrong:', response.error);
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
+        console.log(`Places response for ${address}:`, response); // 응답을 콘솔에 출력
+
+        if (!response.items || !response.items.length || !response.items[0].point) {
+          console.error('No point in the response:', response);
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
+        const { x, y } = response.items[0].point;
+        const latLng = new naver.maps.LatLng(y, x);
+        console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
+        resolve(latLng);
       }
-
-      console.log(`Geocoding response for ${address}:`, response); // 응답을 콘솔에 출력
-
-      if (!response.v2.addresses || !response.v2.addresses.length || !response.v2.addresses[0].point) {
-        console.error('No point in the response:', response);
-        reject(`Failed to get coordinates from address: ${address}`);
-        return;
-      }
-
-      const { x, y } = response.v2.addresses[0].point;
-      const latLng = new naver.maps.LatLng(y, x);
-      console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
-      resolve(latLng);
     });
   }).catch(error => {
     console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
@@ -345,6 +347,7 @@ const coordinatePromises = addresses.map((address) => {
 const coordinates = await Promise.all(coordinatePromises);
 return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
 }
+
 async function startDataLayer(geojson) {
   try {
     // 좌표 변환
