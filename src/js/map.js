@@ -224,7 +224,10 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 'shelter-button-2' 마커와 클러스터링 숨기기
+    // 'shelter-button-2' 마커와 클러스터 숨기기
+    shelterMarkers2.forEach(function(marker) {
+      marker.setVisible(false);
+    });
     if (markerClustering) {
       markerClustering.setMap(null);
       markerClustering = null;
@@ -253,7 +256,10 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       polygon.setVisible(false);
     });
 
-    // 'shelter-button-1' 마커와 클러스터링 숨기기
+    // 'shelter-button-1' 마커와 클러스터 숨기기
+    shelterMarkers1.forEach(function(marker) {
+      marker.setVisible(false);
+    });
     if (markerClustering) {
       markerClustering.setMap(null);
       markerClustering = null;
