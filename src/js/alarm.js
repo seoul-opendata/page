@@ -27,14 +27,14 @@ document.getElementById('alarm').addEventListener('click', async function() {
   var page = document.getElementById('page');
   if (page.classList.contains('show')) {
     page.classList.remove('show');
+  } else {
+    page.classList.add('show');
+
     // 페이지 내용을 초기화합니다.
     while (page.firstChild) {
       page.removeChild(page.firstChild);
     }
-  } else {
-    page.classList.add('show');
 
-    // 데이터가 없을 때만 API 요청을 보냅니다.
     const disasterMsgData = await fetchDisasterMsgData().catch(error => {
       console.error('Failed to fetch disaster message data:', error);
       // 오류 메시지를 화면에 표시합니다.
@@ -46,12 +46,14 @@ document.getElementById('alarm').addEventListener('click', async function() {
     });
 
     // 페이지에 내용을 추가합니다.
-    disasterMsgData.forEach(row => {
-      const createDate = row.querySelector('create_date').textContent;
-      const msg = row.querySelector('msg').textContent;
-      const p = document.createElement('p');
-      p.textContent = `${createDate}: ${msg}`;
-      page.appendChild(p);
-    });
+    if (disasterMsgData) {
+      disasterMsgData.forEach(row => {
+        const createDate = row.querySelector('create_date').textContent;
+        const msg = row.querySelector('msg').textContent;
+        const p = document.createElement('p');
+        p.textContent = `${createDate}: ${msg}`;
+        page.appendChild(p);
+      });
+    }
   }
 });
