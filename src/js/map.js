@@ -303,11 +303,11 @@ async function getCoordinatesFromAddress(url) {
     if (!addressElement) {
       throw new Error('ADR_NAM tag not found in the row element.');
     }
-    return addressElement.textContent;
+    const address = addressElement.textContent;
+    return address;
   });
 
-  const coordinates = [];
-  for (const address of addresses) {
+  const coordinatePromises = addresses.map(async (address) => {
     try {
       const geocodeUrl = `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${encodeURIComponent(address)}`;
       const proxyGeocodeUrl = `https://proxy.seoulshelter.info/${geocodeUrl}`;
@@ -320,13 +320,17 @@ async function getCoordinatesFromAddress(url) {
       const geocodeData = await geocodeResponse.json();
       if (geocodeData.status === 'OK' && geocodeData.meta.totalCount > 0) {
         const { x, y } = geocodeData.addresses[0].jibunAddress;
-        coordinates.push(new naver.maps.LatLng(y, x));
+        const latLng = new naver.maps.LatLng(y, x);
+        console.log(`Coordinates for ${address}: ${latLng}`); // 좌표를 콘솔에 출력
+        return latLng;
       }
     } catch (error) {
       console.error(`Failed to get coordinates from address: ${address}`);
     }
-  }
-  return coordinates;
+  });
+
+  const coordinates = await Promise.all(coordinatePromises);
+  return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
 }
 
 async function startDataLayer(geojson) {
