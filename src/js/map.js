@@ -7,7 +7,8 @@ let shelterMarkers2 = [];
 let polygons = [];
 let markerClustering;
 let rainfallData = {}; // 전역 변수로 선언
-var isShelterButtonClicked = false; 
+var isShelterButtonClicked = false;
+let errorAddresses = JSON.parse(localStorage.getItem('errorAddresses')) || []; 
 // 좌표 변환을 위한 proj4 정의
 proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
@@ -337,38 +338,66 @@ async function getCoordinatesFromAddress(url) {
   });
 
   const coordinatePromises = addresses.map((address) => {
-  return new Promise((resolve, reject) => {
-    if (!address) {
-      console.error('Address is undefined or empty.');
-      reject(`Failed to get coordinates from address: ${address}`);
-      return;
-    }
-  naver.maps.Service.geocode({
-    query: address
-  }, function(status, response) {
-    if (status !== naver.maps.Service.Status.OK) {
-      console.error('Something wrong:', response.error);
-      reject(`Failed to get coordinates from address: ${address}`);
-      return;
-    }
+    return new Promise((resolve, reject) => {
+      if (!address) {
+        console.error('Address is undefined or empty.');
 
-    if (!response.v2.addresses || !response.v2.addresses.length) {
-      console.error('No addresses in the response:', response);
-      reject(`Failed to get coordinates from address: ${address}`);
-      return;
-    }
+        // 오류가 발생한 주소를 배열에 추가
+        errorAddresses.push(address);
 
-    const { x, y } = response.v2.addresses[0];
-    const latLng = new naver.maps.LatLng(y, x);
-    resolve(latLng);
+        // 로컬 스토리지에 오류 주소를 저장
+        localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+        reject(`Failed to get coordinates from address: ${address}`);
+        return;
+      }
+
+      naver.maps.Service.geocode({
+        query: address
+      }, function(status, response) {
+        if (status !== naver.maps.Service.Status.OK) {
+          console.error('Something wrong:', response.error);
+
+          // 오류가 발생한 주소를 배열에 추가
+          errorAddresses.push(address);
+
+          // 로컬 스토리지에 오류 주소를 저장
+          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
+        if (!response.v2.addresses || !response.v2.addresses.length) {
+          console.error('No addresses in the response:', response);
+
+          // 오류가 발생한 주소를 배열에 추가
+          errorAddresses.push(address);
+
+          // 로컬 스토리지에 오류 주소를 저장
+          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
+        const { x, y } = response.v2.addresses[0];
+        const latLng = new naver.maps.LatLng(y, x);
+        resolve(latLng);
+      });
+    }).catch(error => {
+      console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
+
+      // 오류가 발생한 주소를 배열에 추가
+      errorAddresses.push(address);
+
+      // 로컬 스토리지에 오류 주소를 저장
+      localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+    });
   });
-  }).catch(error => {
-    console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
-  });
-});
 
-const coordinates = await Promise.all(coordinatePromises);
-return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
+  const coordinates = await Promise.all(coordinatePromises);
+  return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
 }
 
 async function startDataLayer(geojson) {
