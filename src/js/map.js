@@ -404,9 +404,14 @@ async function startDataLayer(geojson) {
           color = '#B329FF'; // 보라
         } else if (rainfall <= 11.5) {
           color = '#9300E4'; // 진보라
+        } else if (rainfall <= 13) {
+          color = '#B3B4DE'; // 연하늘
+        } else if (rainfall <= 16) {
+          color = '#4C4EB1' // 푸른색
         } else {
-          color = '#000147'; // 짙은 푸른색
+          color = '#000147' // 남색
         }
+
 
         // 폴리곤 생성
         var polygon = new naver.maps.Polygon({
