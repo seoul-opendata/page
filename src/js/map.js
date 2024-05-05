@@ -75,7 +75,7 @@ async function initMap() {
     });
 
     // 로딩 팝업을 보여줍니다.
-    document.getElementById('loading-popup').style.display = 'block';
+    document.getElementById('loading-popup').style.display = 'flex';
 
     // 강수량 데이터를 불러옵니다.
     rainfallData = await fetchRainfallData();
@@ -135,7 +135,7 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
 });
 async function showShelters(map, urls, isAddress) {
   // 로딩 팝업을 보여줍니다.
-  document.getElementById('loading-popup').style.display = 'block';
+  document.getElementById('loading-popup').style.display = 'flex';
 
   const coordinates = [];
   for (const url of urls) {

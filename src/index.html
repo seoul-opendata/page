@@ -96,9 +96,10 @@
       <img src="./images/meter.png" class="aspect-auto w-11/12" alt="level">
     </div>
     <div id="map" class="w-full h-dvh !absolute top-0 left-0 -z-10"></div>
-    <div id="loading-popup" style="display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);">
-      <div style="background-color: #fefefe; margin: 15% auto; padding: 20px; border: 1px solid #888; width: 80%;">
-        <p>Loading...</p>
+    <div id="loading-popup" class="z-50 top-0 fixed w-full h-full bg-white/40 dark:bg-black/40 backdrop-blur-sm justify-center items-center" style="display: none;">
+      <div class="backdrop-blur-xl bg-white/20 dark:bg-zinc-900/20 text-gray-600 rounded-2xl max-w-80 w-4/5 aspect-video select-none text-center flex flex-col justify-evenly m-auto">
+        <h1 class="font-bold text-4xl">로딩중...</h1>
+        <h3 class="font-semibold text-xl">잠시만 기다려주세요</h3>
       </div>
     </div>
   </body>
