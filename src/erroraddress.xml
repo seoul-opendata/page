@@ -1,0 +1,668 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<addresses>
+    <address>
+        <name></name> <!-- 잠실6동 잠동초등학교-->
+        <coordinates>
+            <lat>37.517720</lat>
+            <lng>127.100392</lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name> <!--풍납2동 영파여자중학교-->
+        <coordinates>
+            <lat>37.523629</lat>
+            <lng>127.120265</lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name> <!--풍납1동 풍납초등학교-->
+        <coordinates>
+            <lat>37.534774</lat>
+            <lng>127.117913</lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name> <!--구로3동 서울구로남초등학교-->
+        <coordinates>
+            <lat>37.485432</lat>
+            <lng>126.8908</lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name> <!--광희동 중구구민회관-->
+        <coordinates>
+            <lat>37.568476</lat>
+            <lng>127.006050</lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name> <!--구로3동 만민중앙선교회-->
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name></name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>광장동 산81-5</name>
+        <coordinates>
+            <lat>37.4979</lat>
+            <lng>127.0276</lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산 3-18</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>쏙고개로2라길75</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산3-18</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>원효1가 26-15</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>모진동 3-9</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산 3-18</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>서빙고 241-21</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수1가 685-143(성수중길 63)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>문정1동 90-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>광장동 산 81-5</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>548-2(강남길67)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>원효1가 27-29</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>동빙고 251-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>1083-29</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>답시리동 276-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>회기동 산 1-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산 3-18</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산3-11</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>1669-1(봉천로505)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>청파1가 259-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>관악구 낙성대길 23</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>한강1가 305</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>도림동 도영로7길 10</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>원효2가 54-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>이태원 34-87</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수2가 277-32(발전1길 31)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>장위1동 255-100</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>서빙고 235-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>원효4가 1-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>금호3가 165-1(금남시장길 81)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수1가 22-27(성수중앙길 90)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>청파2가 1-42</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>한강2가1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>청파1가 180-36</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수2가 333-17(성원중길 36)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>이태원 227-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>한강3가 65-5</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>모진동 3-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>이태원 252-15</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>신대방동 293-200</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산 3-18</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>쏙고개로2라길75</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>광장동 산81-5</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산 3-18</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>모진동 3-9</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수1가 685-143(성수중길 63)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>문정1동 90-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>서빙고 241-21</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>548-2(강남길67)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>광장동 산 81-5</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>관악구 낙성대길 23</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>원효1가 27-29</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>1083-29</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>동빙고 251-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>답시리동 276-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>회기동 산 1-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>한강1가 305</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>1669-1(봉천로505)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>이태원 34-87</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>도림동 도영로7길 10</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>원효2가 54-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수2가 277-32(발전1길 31)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>청파1가 259-3</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>장위1동 255-100</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>금호3가 165-1(금남시장길 81)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수1가 22-27(성수중앙길 90)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>중곡4동 산3-11</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>한강2가1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>청파2가 1-42</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>청파1가 180-36</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>성수2가 333-17(성원중길 36)</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>이태원 227-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>한강3가 65-5</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>모진동 3-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>이태원 252-15</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>원효4가 1-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>신대방동 293-200</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+    <address>
+        <name>서빙고 235-1</name>
+        <coordinates>
+            <lat></lat>
+            <lng></lng>
+        </coordinates>
+    </address>
+</addresses>
