@@ -389,7 +389,7 @@ async function startDataLayer(geojson) {
         const rainfall = rainfallData[district] ? parseFloat(rainfallData[district]) : 0;
         var color;
         if (rainfall === 0) {
-          color = '#CCE7FF'; // 비안올때 색
+          color = 'transparent'; // 비안올때 색
         } else if (rainfall <= 0.5) {
           color = '#00BE00'; // 초록색
         } else if (rainfall <= 1.5) {
