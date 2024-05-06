@@ -830,10 +830,6 @@ html {
   background-color: rgb(228 228 231 / 0.2);
 }
 
-.bg-zinc-200\/40{
-  background-color: rgb(228 228 231 / 0.4);
-}
-
 .bg-zinc-200\/50{
   background-color: rgb(228 228 231 / 0.5);
 }
@@ -974,10 +970,6 @@ html {
 
 .dark\:bg-zinc-700\/20:is(.dark *){
   background-color: rgb(63 63 70 / 0.2);
-}
-
-.dark\:bg-zinc-700\/40:is(.dark *){
-  background-color: rgb(63 63 70 / 0.4);
 }
 
 .dark\:bg-zinc-700\/50:is(.dark *){
