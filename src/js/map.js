@@ -14,7 +14,6 @@ fetch('/erroraddress.xml')
   .then(response => response.text())
   .then(data => {
     erroraddress = data;
-    console.log('Fetched erroraddress.xml:', data); // Add this line
   })
   .catch(error => console.error(`Failed to load erroraddress.xml: ${error}`));
 // 좌표 변환을 위한 proj4 정의
@@ -321,6 +320,7 @@ async function getCoordinatesFromXY(url) {
 }
 
 async function getCoordinatesFromAddress(url) {
+  try{
   const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
   const response = await fetch(proxyUrl, {
     headers: {
@@ -377,7 +377,7 @@ async function getCoordinatesFromAddress(url) {
         reject(`Failed to get coordinates from address: ${address}`);
         return;
       }
-            naver.maps.Service.geocode({
+        naver.maps.Service.geocode({
         query: address
       }, function(status, response) {
         if (status !== naver.maps.Service.Status.OK) {
@@ -428,6 +428,9 @@ async function getCoordinatesFromAddress(url) {
 
   const coordinates = await Promise.all(coordinatePromises);
   return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
+} catch (error) {
+  console.error(`Failed to get coordinates from address: ${error}`);
+}
 }
 
 async function startDataLayer(geojson) {
