@@ -14,6 +14,7 @@ fetch('/erroraddress.xml')
   .then(response => response.text())
   .then(data => {
     erroraddress = data;
+    console.log('Fetched erroraddress.xml:', data); // Add this line
   })
   .catch(error => console.error(`Failed to load erroraddress.xml: ${error}`));
 // 좌표 변환을 위한 proj4 정의
