@@ -8,7 +8,6 @@ let polygons = [];
 let markerClustering;
 let rainfallData = {}; // 전역 변수로 선언
 var isShelterButtonClicked = false;
-let errorAddresses = JSON.parse(localStorage.getItem('errorAddresses')) || []; 
 // 좌표 변환을 위한 proj4 정의
 proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
@@ -270,9 +269,15 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
         const lng = parseFloat(addresses[i].getElementsByTagName('lng')[0].textContent);
         const latLng = new naver.maps.LatLng(lat, lng);
         const marker = new naver.maps.Marker({
-          position: latLng,
-          map: map
+          map: map,
+          icon: {
+            content: ['<span class="map_marker"></span>'].join(''),
+            size: new naver.maps.Size(20, 20),
+            anchor: new naver.maps.Point(10, 10),
+          },
+          position: latLng
         });
+        marker.setMap(map); // 마커를 생성하자마자 보입니다.
         shelterMarkers2.push(marker);
       }
     }
@@ -354,14 +359,6 @@ async function getCoordinatesFromAddress(url) {
   const coordinatePromises = addresses.map((address) => {
     return new Promise((resolve, reject) => {
       if (!address) {
-        console.error('Address is undefined or empty.');
-
-        // 오류가 발생한 주소를 배열에 추가
-        errorAddresses.push(address);
-
-        // 로컬 스토리지에 오류 주소를 저장
-        localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
-
         reject(`Failed to get coordinates from address: ${address}`);
         return;
       }
@@ -371,26 +368,11 @@ async function getCoordinatesFromAddress(url) {
       }, function(status, response) {
         if (status !== naver.maps.Service.Status.OK) {
           console.error('Something wrong:', response.error);
-
-          // 오류가 발생한 주소를 배열에 추가
-          errorAddresses.push(address);
-
-          // 로컬 스토리지에 오류 주소를 저장
-          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
-
           reject(`Failed to get coordinates from address: ${address}`);
           return;
         }
 
         if (!response.v2.addresses || !response.v2.addresses.length) {
-          console.error('No addresses in the response:', response);
-
-          // 오류가 발생한 주소를 배열에 추가
-          errorAddresses.push(address);
-
-          // 로컬 스토리지에 오류 주소를 저장
-          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
-
           reject(`Failed to get coordinates from address: ${address}`);
           return;
         }
@@ -400,13 +382,7 @@ async function getCoordinatesFromAddress(url) {
         resolve(latLng);
       });
     }).catch(error => {
-      console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
-
-      // 오류가 발생한 주소를 배열에 추가
-      errorAddresses.push(address);
-
-      // 로컬 스토리지에 오류 주소를 저장
-      localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+      console.error(error);
     });
   });
 
