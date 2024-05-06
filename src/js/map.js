@@ -8,6 +8,14 @@ let polygons = [];
 let markerClustering;
 let rainfallData = {}; // 전역 변수로 선언
 var isShelterButtonClicked = false;
+let erroraddress;
+
+fetch('/erroraddress.xml')
+  .then(response => response.text())
+  .then(data => {
+    erroraddress = data;
+  })
+  .catch(error => console.error(`Failed to load erroraddress.xml: ${error}`));
 // 좌표 변환을 위한 proj4 정의
 proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
@@ -368,13 +376,13 @@ async function getCoordinatesFromAddress(url) {
         reject(`Failed to get coordinates from address: ${address}`);
         return;
       }
-      naver.maps.Service.geocode({
+            naver.maps.Service.geocode({
         query: address
       }, function(status, response) {
         if (status !== naver.maps.Service.Status.OK) {
           // erroraddress.xml에서 NAME 태그 값을 찾아 좌표를 등록
           const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(erroraddress.xml, "text/xml");
+          const xmlDoc = parser.parseFromString(erroraddress, "text/xml");
           const addressElements = xmlDoc.getElementsByTagName('address');
           for (let i = 0; i < addressElements.length; i++) {
             const nameElement = addressElements[i].getElementsByTagName('name')[0];
