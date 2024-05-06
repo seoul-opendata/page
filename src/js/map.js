@@ -269,7 +269,7 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
       shelterMarkers2 = await showShelters(map, [url], true);
     }
-
+    console.log(shelterMarkers2); // Add this line
     shelterMarkers2.forEach(marker => marker.setVisible(true));
 
     // 클러스터링 객체 생성
@@ -380,6 +380,7 @@ async function getCoordinatesFromAddress(url) {
         query: address
       }, function(status, response) {
         if (status !== naver.maps.Service.Status.OK) {
+          console.log(`Failed to geocode address: ${address}`); // Add this line
           // erroraddress.xml에서 NAME 태그 값을 찾아 좌표를 등록
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(erroraddress, "text/xml");
@@ -412,6 +413,7 @@ async function getCoordinatesFromAddress(url) {
         }
 
         if (!response.v2.addresses || !response.v2.addresses.length) {
+          console.log(`No coordinates found for address: ${address}`); // Add this line
           reject(`Failed to get coordinates from address: ${address}`);
           return;
         }
