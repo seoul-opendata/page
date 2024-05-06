@@ -367,6 +367,7 @@ async function getCoordinatesFromAddress(url) {
                 map: map
               });
               shelterMarkers2.push(marker);
+              console.log(`New marker added for address: ${address}`); // Add this line
             }
 
             resolve(latLng);
@@ -378,51 +379,54 @@ async function getCoordinatesFromAddress(url) {
         return;
       }
         naver.maps.Service.geocode({
-        query: address
-      }, function(status, response) {
-        if (status !== naver.maps.Service.Status.OK) {
-          console.log(`Failed to geocode address: ${address}`); // Add this line
-          // erroraddress.xml에서 NAME 태그 값을 찾아 좌표를 등록
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(erroraddress, "text/xml");
-          const addressElements = xmlDoc.getElementsByTagName('address');
-          for (let i = 0; i < addressElements.length; i++) {
-            const nameElement = addressElements[i].getElementsByTagName('name')[0];
-            if (nameElement && nameElement.textContent.trim() === address) {
-              const latElement = addressElements[i].getElementsByTagName('lat')[0];
-              const lngElement = addressElements[i].getElementsByTagName('lng')[0];
-              const latLng = new naver.maps.LatLng(parseFloat(latElement.textContent), parseFloat(lngElement.textContent));
+  query: address
+}, function(status, response) {
+  if (status !== naver.maps.Service.Status.OK) {
+    console.log(`Failed to geocode address: ${address}`); // Add this line
+    // erroraddress.xml에서 NAME 태그 값을 찾아 좌표를 등록
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(erroraddress, "text/xml");
+    const addressElements = xmlDoc.getElementsByTagName('address');
+    for (let i = 0; i < addressElements.length; i++) {
+      const nameElement = addressElements[i].getElementsByTagName('name')[0];
+      if (nameElement && nameElement.textContent.trim() === address) {
+        console.log(`Found address in erroraddress.xml: ${address}`); // Add this line
+        const latElement = addressElements[i].getElementsByTagName('lat')[0];
+        const lngElement = addressElements[i].getElementsByTagName('lng')[0];
+        const latLng = new naver.maps.LatLng(parseFloat(latElement.textContent), parseFloat(lngElement.textContent));
 
-              // shelterMarkers2에 이미 존재하는지 확인
-              const isExisting = shelterMarkers2.some(marker => marker.getPosition().equals(latLng));
-              if (!isExisting) {
-                // 새로운 마커 생성
-                const marker = new naver.maps.Marker({
-                  position: latLng,
-                  map: map
-                });
-                shelterMarkers2.push(marker);
-              }
-
-              resolve(latLng);
-              return;
-}
-          }
-
-          reject(`Failed to get coordinates from address: ${address}`);
-          return;
+        // shelterMarkers2에 이미 존재하는지 확인
+        const isExisting = shelterMarkers2.some(marker => marker.getPosition().equals(latLng));
+        if (!isExisting) {
+          // 새로운 마커 생성
+          const marker = new naver.maps.Marker({
+            position: latLng,
+            map: map
+          });
+          shelterMarkers2.push(marker);
+          console.log(`New marker added for address: ${address}`); // Add this line
         }
 
-        if (!response.v2.addresses || !response.v2.addresses.length) {
-          console.log(`No coordinates found for address: ${address}`); // Add this line
-          reject(`Failed to get coordinates from address: ${address}`);
-          return;
-        }
-
-        const { x, y } = response.v2.addresses[0];
-        const latLng = new naver.maps.LatLng(y, x);
         resolve(latLng);
-      });
+        return;
+      }
+    }
+
+    reject(`Failed to get coordinates from address: ${address}`);
+    return;
+  }
+
+  if (!response.v2.addresses || !response.v2.addresses.length) {
+    console.log(`No coordinates found for address: ${address}`); // Add this line
+    reject(`Failed to get coordinates from address: ${address}`);
+    return;
+  }
+
+  const { x, y } = response.v2.addresses[0];
+  const latLng = new naver.maps.LatLng(y, x);
+  console.log(`Coordinates found for address: ${address}, lat: ${y}, lng: ${x}`); // Add this line
+  resolve(latLng);
+});
     });
   });
 
