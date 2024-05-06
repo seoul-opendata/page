@@ -87,19 +87,16 @@ async function initMap() {
 }
 document.addEventListener('DOMContentLoaded', (event) => {
   let userMarker; // 사용자 마커를 저장할 변수를 추가합니다.
+  let watchId; // 위치 추적 ID를 저장할 변수를 추가합니다.
+
   document.querySelector('.my-position').addEventListener('click', async function() {
-    if (userMarker) { // 이전 사용자 마커가 있으면 제거합니다.
+    if (userMarker) { 
       userMarker.setMap(null);
     }
-    // 사용자의 위치 정보를 실시간으로 얻습니다.
-    navigator.geolocation.watchPosition(async function(position) {
+    navigator.geolocation.getCurrentPosition(async function(position) {
       // 사용자의 위도와 경도를 얻습니다.
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
-
-      // 사용자의 위치를 기준으로 지도의 중심을 이동하고, 레벨을 확대합니다.
-      map.setCenter(new naver.maps.LatLng(lat, lng));
-      map.setZoom(17); // 사용자 위치 줌레벨 
 
       // 사용자의 위치에 마커를 추가합니다.
       userMarker = new naver.maps.Marker({
@@ -112,6 +109,24 @@ document.addEventListener('DOMContentLoaded', (event) => {
             anchor: new naver.maps.Point(10, 10),
         },
         position: new naver.maps.LatLng(lat, lng)
+      });
+
+      // 지도의 중심을 사용자의 위치로 이동합니다.
+      map.setCenter(new naver.maps.LatLng(lat, lng));
+      map.setZoom(14);
+
+      // 사용자의 위치가 변경될 때마다 마커를 이동합니다.
+      if (watchId) {
+        // 이전에 시작한 위치 추적을 중지합니다.
+        navigator.geolocation.clearWatch(watchId);
+      }
+      watchId = navigator.geolocation.watchPosition(function(position) {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const newPosition = new naver.maps.LatLng(lat, lng);
+        userMarker.setPosition(newPosition);
+      }, function(error) {
+        console.error(`Failed to watch user's location: ${error}`);
       });
     }, function(error) {
       // 사용자가 위치 정보를 제공하지 않았거나, 다른 오류가 발생한 경우
