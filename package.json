@@ -5,6 +5,7 @@
     "tailwindcss": "^3.4.3"
   },
   "dependencies": {
-    "proj4": "^2.11.0"
+    "proj4": "^2.11.0",
+    "tailwind-scrollbar-hide": "^1.1.7"
   }
 }

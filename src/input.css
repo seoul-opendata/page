@@ -10,18 +10,3 @@
     border: 2px solid white;
     display: block;
 }
-
-#page {
-    width: 200px;
-    max-height: 100vh;
-    overflow-y: auto;
-    position: fixed;
-    right: 0;
-    top: 0;
-    transition: transform 0.3s ease-in-out;
-    transform: translateX(100%);
-}
-
-#page.show {
-    transform: translateX(0);
-}

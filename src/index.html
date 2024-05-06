@@ -75,9 +75,8 @@
                 <span class="sr-only">Switch to light / dark mode</span>
               </label>
             </div>
-            <button id="alarm" type="button" class="material-symbols-outlined relative rounded-full text-gray-600 hover:text-gray-500 focus:outline-none">
+            <button id="CBS-button" type="button" class="material-symbols-outlined relative rounded-full text-gray-600 hover:text-gray-500 focus:outline-none">
               <span>&#xe7f4;</span>
-              <div id="page" class="absolute top-0 mt-12 w-64 p-2 bg-white rounded shadow-lg hidden">
               </div>
             </button>
           </div>
@@ -100,6 +99,13 @@
       <div class="backdrop-blur-xl bg-white/20 dark:bg-zinc-900/20 text-gray-600 rounded-2xl max-w-80 w-4/5 aspect-video select-none text-center flex flex-col justify-evenly m-auto">
         <h1 class="font-bold text-4xl">로딩중...</h1>
         <h3 class="font-semibold text-xl">잠시만 기다려주세요</h3>
+      </div>
+    </div>
+    <div id="CBS" class="hidden absolute z-30 backdrop-blur-3xl bg-white/20 dark:bg-zinc-900/20 text-gray-600 rounded-2xl max-w-80 w-11/12 max-h-96 h-2/3 right-5 mt-5 p-5 overflow-hidden">
+      <h1 class="font-bold text-xl mb-4">재난문자 알림</h1>
+      <div class="max-h-80 overflow-auto scrollbar-hide">
+        <ul id="CBS-info" class="list-none [&>*]:bg-zinc-200 dark:[&>*]:bg-zinc-700 dark:[&>*]:text-white [&>*]:rounded-2xl [&>*]:mb-2 [&>*]:p-4">
+        </ul>
       </div>
     </div>
   </body>

@@ -23,22 +23,27 @@ async function fetchDisasterMsgData() {
     xhr.send('');
   });
 }
-document.getElementById('alarm').addEventListener('click', async function() {
-  var page = document.getElementById('page');
-  if (page.classList.contains('show')) {
-    page.classList.remove('show');
-  } else {
-    page.classList.add('show');
+
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("CBS-button");
+  const menu = document.getElementById("CBS");
+  button.addEventListener("click", function () {
+    menu.classList.toggle("hidden");
+  });
+});
+
+document.getElementById('CBS-button').addEventListener('click', async function() {
+  var page = document.getElementById('CBS-info');
 
     // 페이지 내용을 초기화합니다.
-    while (page.firstChild) {
-      page.removeChild(page.firstChild);
+    while (page.Child) {
+      page.removeChild(page.lastChild);
     }
 
     const disasterMsgData = await fetchDisasterMsgData().catch(error => {
       console.error('Failed to fetch disaster message data:', error);
       // 오류 메시지를 화면에 표시합니다.
-      const p = document.createElement('p');
+      const p = document.createElement('li');
       p.textContent = '재난문자 데이터를 불러오는 데 실패했습니다.';
       page.appendChild(p);
       // 함수를 종료합니다.
@@ -50,10 +55,9 @@ document.getElementById('alarm').addEventListener('click', async function() {
       disasterMsgData.forEach(row => {
         const createDate = row.querySelector('create_date').textContent;
         const msg = row.querySelector('msg').textContent;
-        const p = document.createElement('p');
+        const p = document.createElement('li');
         p.textContent = `${createDate}: ${msg}`;
         page.appendChild(p);
       });
     }
-  }
 });
