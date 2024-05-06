@@ -39,11 +39,11 @@
   </head>
 
   <body>
-    <nav class="backdrop-blur-xl bg-white/20 dark:bg-zinc-900/20 select-none">
+    <nav class="backdrop-blur-xl bg-zinc-200/20 dark:bg-zinc-700/20 select-none">
       <div class="mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex h-16 items-center justify-between">
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            <button type="button" id="navbar-toggle" class="relative inline-flex items-center justify-center rounded-md p-2 text-gray-600 hover:text-gray-500 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
+            <button type="button" id="navbar-toggle" class="relative inline-flex items-center justify-center rounded-md p-2 text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:outline-none" aria-controls="mobile-menu" aria-expanded="false">
               <span class="absolute -inset-0.5"></span>
               <svg class="block h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
             </button>
@@ -57,25 +57,25 @@
             </div>
             <div class="hidden sm:ml-6 sm:block">
               <div class="flex space-x-4">
-                <a class="flood-risk-button font-bold text-gray-600 hover:text-gray-500 focus:text-gray-500 px-3 py-2 text-base">침수 위험도</a>
-                <a class="shelter-button-1 font-bold text-gray-600 hover:text-gray-500 focus:text-gray-500 px-3 py-2 text-base">임시거주시설</a>
-                <a class="shelter-button-2 font-bold text-gray-600 hover:text-gray-500 focus:text-gray-500 px-3 py-2 text-base">수해대피소</a>
+                <a class="flood-risk-button font-bold text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 px-3 py-2 text-base">침수 위험도</a>
+                <a class="shelter-button-1 font-bold text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 px-3 py-2 text-base">임시거주시설</a>
+                <a class="shelter-button-2 font-bold text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 px-3 py-2 text-base">수해대피소</a>
               </div>
             </div>
           </div>
           <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <div type="button" class="material-symbols-outlined relative rounded-full text-gray-600 hover:text-gray-500 focus:outline-none">
+            <div type="button" class="material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:outline-none">
               <a class="safe-video" href="https://syg732543-syg732543.ktcdn.co.kr/video/ENC_9f277bd6-a40a-4bcd-9c04-72f571ee415b-1687758637928.mp4">&#xe41b;</a>
             </div>
             <div class="flex flex-col justify-center">
               <input type="checkbox" id="light-switch" class="light-switch sr-only"/>
               <label class="relative cursor-pointer p-2" for="light-switch">
-                <span class="dark:hidden leading-normal material-symbols-outlined relative rounded-full text-gray-600 hover:text-gray-500 focus:outline-none">&#xe51c;</span>
-                <span class="hidden dark:block leading-normal material-symbols-outlined relative rounded-full text-gray-600 hover:text-gray-500 focus:outline-none">&#xe518;</span>
+                <span class="dark:hidden leading-normal material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 focus:outline-none">&#xe51c;</span>
+                <span class="hidden dark:block leading-normal material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 focus:outline-none">&#xe518;</span>
                 <span class="sr-only">Switch to light / dark mode</span>
               </label>
             </div>
-            <button id="CBS-button" type="button" class="material-symbols-outlined relative rounded-full text-gray-600 hover:text-gray-500 focus:outline-none">
+            <button id="CBS-button" type="button" class="material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 focus:outline-none">
               <span>&#xe7f4;</span>
               </div>
             </button>
@@ -84,27 +84,27 @@
       </div>
       <div id="navbar-dropdown" class="sm:hidden hidden">
         <div class="px-2 pb-3 pt-2 flex justify-around">
-          <a class="flood-risk-button font-bold text-gray-600 hover:text-gray-500 focus:text-gray-500 px-3 py-2 text-base">침수 위험도</a>
-          <a class="shelter-button-1 font-bold text-gray-600 hover:text-gray-500 focus:text-gray-500 px-3 py-2 text-base">임시거주시설</a>
-          <a class="shelter-button-2 font-bold text-gray-600 hover:text-gray-500 focus:text-gray-500 px-3 py-2 text-base">수해대피소</a>
+          <a class="flood-risk-button font-bold text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 px-3 py-2 text-base">침수 위험도</a>
+          <a class="shelter-button-1 font-bold text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 px-3 py-2 text-base">임시거주시설</a>
+          <a class="shelter-button-2 font-bold text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 px-3 py-2 text-base">수해대피소</a>
         </div>
       </div>
     </nav>
-    <div class="my-position flex rounded-lg leading-normal justify-center material-symbols-outlined absolute w-9 h-9 z-20 backdrop-blur-xl bg-white/20 dark:bg-zinc-900/20 select-none text-gray-600 hover:text-gray-500 focus:text-gray-500 bottom-5 right-5">&#xe55c;</div>
-    <div class="flex rounded-lg justify-center absolute p-2 w-20 h-64 z-20 backdrop-blur-xl bg-white/20 dark:bg-zinc-900/20 select-none ml-5 mt-5">
+    <div class="my-position flex rounded-lg leading-normal justify-center material-symbols-outlined absolute w-9 h-9 z-20 backdrop-blur-xl bg-zinc-200/20 dark:bg-zinc-700/20 select-none text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 bottom-5 right-5">&#xe55c;</div>
+    <div class="flex rounded-lg justify-center absolute p-2 w-20 h-64 z-20 backdrop-blur-xl bg-zinc-200/20 dark:bg-zinc-700/20 select-none ml-5 mt-5">
       <img src="./images/meter.png" class="aspect-auto w-11/12" alt="level">
     </div>
     <div id="map" class="w-full h-dvh !absolute top-0 left-0 -z-10"></div>
-    <div id="loading-popup" class="z-50 top-0 fixed w-full h-full bg-white/40 dark:bg-black/40 backdrop-blur-sm justify-center items-center" style="display: none;">
-      <div class="backdrop-blur-xl bg-white/20 dark:bg-zinc-900/20 text-gray-600 rounded-2xl max-w-80 w-4/5 aspect-video select-none text-center flex flex-col justify-evenly m-auto">
+    <div id="loading-popup" class="z-50 top-0 fixed w-full h-full bg-zinc-200/40 dark:bg-zinc-700/40 backdrop-blur-sm justify-center items-center" style="display: none;">
+      <div class="backdrop-blur-xl bg-zinc-200/50 dark:bg-zinc-700/50 text-zinc-950 dark:text-zinc-50 rounded-2xl max-w-80 w-4/5 aspect-video select-none text-center flex flex-col justify-evenly m-auto">
         <h1 class="font-bold text-4xl">로딩중...</h1>
         <h3 class="font-semibold text-xl">잠시만 기다려주세요</h3>
       </div>
     </div>
-    <div id="CBS" class="hidden absolute z-30 backdrop-blur-3xl bg-white/20 dark:bg-zinc-900/20 text-gray-600 rounded-2xl max-w-80 w-11/12 max-h-96 h-2/3 right-5 mt-5 p-5 overflow-hidden">
+    <div id="CBS" class="hidden absolute z-30 backdrop-blur-3xl bg-zinc-200/20 dark:bg-zinc-700/20 text-zinc-950 dark:text-zinc-50 rounded-2xl max-w-80 w-11/12 max-h-96 h-2/3 right-5 mt-5 p-5 overflow-hidden">
       <h1 class="font-bold text-xl mb-4">재난문자 알림</h1>
       <div class="max-h-80 overflow-auto scrollbar-hide">
-        <ul id="CBS-info" class="list-none [&>*]:bg-zinc-200 dark:[&>*]:bg-zinc-700 dark:[&>*]:text-white [&>*]:rounded-2xl [&>*]:mb-2 [&>*]:p-4">
+        <ul id="CBS-info" class="list-none [&>*]:bg-zinc-200 dark:[&>*]:bg-zinc-700 [&>*]:text-zinc-950 dark:[&>*]:text-zinc-50 [&>*]:rounded-2xl [&>*]:mb-2 [&>*]:p-4">
         </ul>
       </div>
     </div>
