@@ -388,7 +388,7 @@ async function getCoordinatesFromAddress(url) {
           const addressElements = xmlDoc.getElementsByTagName('address');
           for (let i = 0; i < addressElements.length; i++) {
             const nameElement = addressElements[i].getElementsByTagName('name')[0];
-            if (nameElement.textContent.trim() === address) {
+            if (nameElement && nameElement.textContent.trim() === address) {
               const latElement = addressElements[i].getElementsByTagName('lat')[0];
               const lngElement = addressElements[i].getElementsByTagName('lng')[0];
               const latLng = new naver.maps.LatLng(parseFloat(latElement.textContent), parseFloat(lngElement.textContent));
@@ -406,7 +406,7 @@ async function getCoordinatesFromAddress(url) {
 
               resolve(latLng);
               return;
-            }
+}
           }
 
           reject(`Failed to get coordinates from address: ${address}`);
