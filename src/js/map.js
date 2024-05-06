@@ -339,52 +339,104 @@ async function getCoordinatesFromAddress(url) {
 
   const coordinatePromises = addresses.map((address) => {
     return new Promise((resolve, reject) => {
-      if (!address) {
-        console.error('Address is undefined or empty.');
+  if (!address) {
+  console.error('Address is undefined or empty.');
 
-        // 오류가 발생한 주소를 배열에 추가
-        errorAddresses.push(address);
+  // 오류가 발생한 주소를 배열에 추가
+  errorAddresses.push(address);
 
-        // 로컬 스토리지에 오류 주소를 저장
-        localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+  // 로컬 스토리지에 오류 주소를 저장
+  localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
 
-        reject(`Failed to get coordinates from address: ${address}`);
-        return;
+  // erroraddress.xml에서 NAME 태그 값을 찾아 좌표를 등록
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(erroraddress.xml, "text/xml");
+  const addressElements = xmlDoc.getElementsByTagName('address');
+  for (let i = 0; i < addressElements.length; i++) {
+    const nameElement = addressElements[i].getElementsByTagName('name')[0];
+    if (nameElement.textContent.trim() === address) {
+      const latElement = addressElements[i].getElementsByTagName('lat')[0];
+      const lngElement = addressElements[i].getElementsByTagName('lng')[0];
+      const latLng = new naver.maps.LatLng(parseFloat(latElement.textContent), parseFloat(lngElement.textContent));
+
+      // shelterMarkers2에 이미 존재하는지 확인
+      const isExisting = shelterMarkers2.some(marker => marker.getPosition().equals(latLng));
+      if (!isExisting) {
+        // 새로운 마커 생성
+        const marker = new naver.maps.Marker({
+          position: latLng,
+          map: map
+        });
+        shelterMarkers2.push(marker);
       }
 
+      resolve(latLng);
+      return;
+    }
+  }
+
+  reject(`Failed to get coordinates from address: ${address}`);
+  return;
+}
       naver.maps.Service.geocode({
-        query: address
-      }, function(status, response) {
-        if (status !== naver.maps.Service.Status.OK) {
-          console.error('Something wrong:', response.error);
+  query: address
+}, function(status, response) {
+  if (status !== naver.maps.Service.Status.OK) {
+    // erroraddress.xml에서 NAME 태그 값을 찾아 좌표를 등록
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(erroraddress.xml, "text/xml");
+    const addressElements = xmlDoc.getElementsByTagName('address');
+    for (let i = 0; i < addressElements.length; i++) {
+      const nameElement = addressElements[i].getElementsByTagName('name')[0];
+      if (nameElement.textContent.trim() === address) {
+        const latElement = addressElements[i].getElementsByTagName('lat')[0];
+        const lngElement = addressElements[i].getElementsByTagName('lng')[0];
+        const latLng = new naver.maps.LatLng(parseFloat(latElement.textContent), parseFloat(lngElement.textContent));
 
-          // 오류가 발생한 주소를 배열에 추가
-          errorAddresses.push(address);
-
-          // 로컬 스토리지에 오류 주소를 저장
-          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
-
-          reject(`Failed to get coordinates from address: ${address}`);
-          return;
+        // shelterMarkers2에 이미 존재하는지 확인
+        const isExisting = shelterMarkers2.some(marker => marker.getPosition().equals(latLng));
+        if (!isExisting) {
+          // 새로운 마커 생성
+          const marker = new naver.maps.Marker({
+            position: latLng,
+            map: map
+          });
+          shelterMarkers2.push(marker);
         }
 
-        if (!response.v2.addresses || !response.v2.addresses.length) {
-          console.error('No addresses in the response:', response);
-
-          // 오류가 발생한 주소를 배열에 추가
-          errorAddresses.push(address);
-
-          // 로컬 스토리지에 오류 주소를 저장
-          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
-
-          reject(`Failed to get coordinates from address: ${address}`);
-          return;
-        }
-
-        const { x, y } = response.v2.addresses[0];
-        const latLng = new naver.maps.LatLng(y, x);
         resolve(latLng);
-      });
+        return;
+      }
+    }
+
+    console.error('Something wrong:', response.error);
+
+    // 오류가 발생한 주소를 배열에 추가
+    errorAddresses.push(address);
+
+    // 로컬 스토리지에 오류 주소를 저장
+    localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+    reject(`Failed to get coordinates from address: ${address}`);
+    return;
+  }
+
+  if (!response.v2.addresses || !response.v2.addresses.length) {
+
+    // 오류가 발생한 주소를 배열에 추가
+    errorAddresses.push(address);
+
+    // 로컬 스토리지에 오류 주소를 저장
+    localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+    reject(`Failed to get coordinates from address: ${address}`);
+    return;
+  }
+
+  const { x, y } = response.v2.addresses[0];
+  const latLng = new naver.maps.LatLng(y, x);
+  resolve(latLng);
+});
     }).catch(error => {
       console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
 
