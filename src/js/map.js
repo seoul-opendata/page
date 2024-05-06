@@ -369,7 +369,7 @@ async function getCoordinatesFromAddress(url) {
   const coordinatePromises = addresses.map((address) => {
     return new Promise((resolve, reject) => {
       if (!address) {
-        reject(`Failed to get coordinates from address: ${address}`);
+        reject();
         return;
       }
 
@@ -378,12 +378,12 @@ async function getCoordinatesFromAddress(url) {
       }, function(status, response) {
         if (status !== naver.maps.Service.Status.OK) {
           console.error('Something wrong:', response.error);
-          reject(`Failed to get coordinates from address: ${address}`);
+          reject();
           return;
         }
 
         if (!response.v2.addresses || !response.v2.addresses.length) {
-          reject(`Failed to get coordinates from address: ${address}`);
+          reject();
           return;
         }
 
