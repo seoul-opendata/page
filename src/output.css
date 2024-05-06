@@ -945,6 +945,15 @@ html {
   display: block;
 }
 
+.user_marker {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color:chartreuse;
+  border: 1px solid white;
+  display: block;
+}
+
 .hover\:text-zinc-800:hover{
   --tw-text-opacity: 1;
   color: rgb(39 39 42 / var(--tw-text-opacity));

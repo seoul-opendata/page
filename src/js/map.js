@@ -87,6 +87,9 @@ async function initMap() {
 }
 document.addEventListener('DOMContentLoaded', (event) => {
   document.querySelector('.my-position').addEventListener('click', async function() {
+    if (document.getElementById('user_marker')) {
+      document.getElementById('user_marker').remove();
+    }
     // 사용자의 위치 정보를 얻습니다.
     navigator.geolocation.getCurrentPosition(async function(position) {
       // 사용자의 위도와 경도를 얻습니다.
@@ -100,6 +103,13 @@ document.addEventListener('DOMContentLoaded', (event) => {
       // 사용자의 위치에 마커를 추가합니다.
       new naver.maps.Marker({
         map: map,
+        icon: {
+            content: [
+                        '<span class="user_marker"></span>'
+                    ].join(''),
+            size: new naver.maps.Size(20, 20),
+            anchor: new naver.maps.Point(10, 10),
+        },
         position: new naver.maps.LatLng(lat, lng)
       });
     }, function(error) {
