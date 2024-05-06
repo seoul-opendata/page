@@ -8,14 +8,7 @@ let polygons = [];
 let markerClustering;
 let rainfallData = {}; // 전역 변수로 선언
 var isShelterButtonClicked = false;
-let erroraddress;
-
-fetch('/erroraddress.xml')
-  .then(response => response.text())
-  .then(data => {
-    erroraddress = data;
-  })
-  .catch(error => console.error(`Failed to load erroraddress.xml: ${error}`));
+let errorAddresses = JSON.parse(localStorage.getItem('errorAddresses')) || []; 
 // 좌표 변환을 위한 proj4 정의
 proj4.defs([
   ['EPSG:5179', '+proj=tmerc +lat_0=38 +lon_0=127.5 +k=0.9996 +x_0=1000000 +y_0=2000000 +ellps=GRS80 +units=m +no_defs'],
@@ -269,7 +262,7 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
       const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
       shelterMarkers2 = await showShelters(map, [url], true);
     }
-    console.log(shelterMarkers2); // Add this line
+
     shelterMarkers2.forEach(marker => marker.setVisible(true));
 
     // 클러스터링 객체 생성
@@ -320,60 +313,91 @@ async function getCoordinatesFromXY(url) {
 }
 
 async function getCoordinatesFromAddress(url) {
-  try {
-    const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
-    const response = await fetch(proxyUrl, {
-      headers: {
-        'origin': window.location.origin,
-        'x-requested-with': 'XMLHttpRequest'
-      }
-    });
-    const xmlText = await response.text();
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlText, "text/xml");
-    const rowElements = xmlDoc.getElementsByTagName('row');
-    if (!rowElements.length) {
-      return [];
+  const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
+  const response = await fetch(proxyUrl, {
+    headers: {
+      'origin': window.location.origin,
+      'x-requested-with': 'XMLHttpRequest'
     }
-    const addresses = Array.from(rowElements).map(rowElement => {
-      const addressElement = rowElement.getElementsByTagName('ADR_NAM')[0];
-      if (!addressElement) {
-        throw new Error('ADR_NAM tag not found in the row element.');
-      }
-      const address = addressElement.textContent;
-      return address;
-    });
-
-    const coordinatePromises = addresses.map((address) => {
-      return new Promise((resolve, reject) => {
-        naver.maps.Service.geocode({
-          query: address
-        }, function(status, response) {
-          if (status !== naver.maps.Service.Status.OK) {
-            console.log(`Failed to geocode address: ${address}`);
-            reject(`Failed to get coordinates from address: ${address}`);
-            return;
-          }
-
-          if (!response.v2.addresses || !response.v2.addresses.length) {
-            console.log(`No coordinates found for address: ${address}`);
-            reject(`Failed to get coordinates from address: ${address}`);
-            return;
-          }
-
-          const { x, y } = response.v2.addresses[0];
-          const latLng = new naver.maps.LatLng(y, x);
-          console.log(`Coordinates found for address: ${address}, lat: ${y}, lng: ${x}`);
-          resolve(latLng);
-        });
-      });
-    });
-
-    const coordinates = await Promise.all(coordinatePromises);
-    return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
-  } catch (error) {
-    console.error(`Failed to get coordinates from address: ${error}`);
+  });
+  const xmlText = await response.text();
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+  const rowElements = xmlDoc.getElementsByTagName('row');
+  if (!rowElements.length) {
+    console.error(`No row tag found in the XML document for URL: ${url}`);
+    return [];
   }
+  const addresses = Array.from(rowElements).map(rowElement => {
+    const addressElement = rowElement.getElementsByTagName('ADR_NAM')[0];
+    if (!addressElement) {
+      throw new Error('ADR_NAM tag not found in the row element.');
+    }
+    const address = addressElement.textContent;
+    return address;
+  });
+
+  const coordinatePromises = addresses.map((address) => {
+    return new Promise((resolve, reject) => {
+      if (!address) {
+        console.error('Address is undefined or empty.');
+
+        // 오류가 발생한 주소를 배열에 추가
+        errorAddresses.push(address);
+
+        // 로컬 스토리지에 오류 주소를 저장
+        localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+        reject(`Failed to get coordinates from address: ${address}`);
+        return;
+      }
+
+      naver.maps.Service.geocode({
+        query: address
+      }, function(status, response) {
+        if (status !== naver.maps.Service.Status.OK) {
+          console.error('Something wrong:', response.error);
+
+          // 오류가 발생한 주소를 배열에 추가
+          errorAddresses.push(address);
+
+          // 로컬 스토리지에 오류 주소를 저장
+          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
+        if (!response.v2.addresses || !response.v2.addresses.length) {
+          console.error('No addresses in the response:', response);
+
+          // 오류가 발생한 주소를 배열에 추가
+          errorAddresses.push(address);
+
+          // 로컬 스토리지에 오류 주소를 저장
+          localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+
+          reject(`Failed to get coordinates from address: ${address}`);
+          return;
+        }
+
+        const { x, y } = response.v2.addresses[0];
+        const latLng = new naver.maps.LatLng(y, x);
+        resolve(latLng);
+      });
+    }).catch(error => {
+      console.error(`Failed to get coordinates from address: ${address}. Error: ${error}`);
+
+      // 오류가 발생한 주소를 배열에 추가
+      errorAddresses.push(address);
+
+      // 로컬 스토리지에 오류 주소를 저장
+      localStorage.setItem('errorAddresses', JSON.stringify(errorAddresses));
+    });
+  });
+
+  const coordinates = await Promise.all(coordinatePromises);
+  return coordinates.filter(coordinate => coordinate); // undefined 값을 제거
 }
 
 async function startDataLayer(geojson) {
