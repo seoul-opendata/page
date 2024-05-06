@@ -238,7 +238,6 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
 
   });
 });
-
 document.querySelectorAll('.shelter-button-2').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
@@ -261,6 +260,21 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     if (shelterMarkers2.length === 0) {
       const url = 'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/shuntPlace0522/1/1000';
       shelterMarkers2 = await showShelters(map, [url], true);
+
+      // erroraddress.xml에서 주소를 읽어와 마커 추가
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(await fetch('/erroraddress.xml').then(res => res.text()), 'text/xml');
+      const addresses = xmlDoc.getElementsByTagName('address');
+      for (let i = 0; i < addresses.length; i++) {
+        const lat = parseFloat(addresses[i].getElementsByTagName('lat')[0].textContent);
+        const lng = parseFloat(addresses[i].getElementsByTagName('lng')[0].textContent);
+        const latLng = new naver.maps.LatLng(lat, lng);
+        const marker = new naver.maps.Marker({
+          position: latLng,
+          map: map
+        });
+        shelterMarkers2.push(marker);
+      }
     }
 
     shelterMarkers2.forEach(marker => marker.setVisible(true));
