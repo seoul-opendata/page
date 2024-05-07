@@ -158,7 +158,7 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
     });
 
     //미터 보이기
-    let element = document.querySelector('.flex');
+    let element = document.querySelector('#meter-flood');
     element.style.display = 'block';
   });
 });
@@ -226,7 +226,7 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
     e.preventDefault();
 
     // 미터 숨기기
-    let element = document.querySelector('.flex');
+    let element = document.querySelector('#meter-flood');
     element.style.display = 'none';
     // 폴리곤 숨기기
     polygons.forEach(function(polygon) {
@@ -275,7 +275,7 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
     e.preventDefault();
 
     // 미터 숨기기
-    let element = document.querySelector('.flex');
+    let element = document.querySelector('#meter-flood');
     element.style.display = 'none';
     
     // 폴리곤 숨기기
