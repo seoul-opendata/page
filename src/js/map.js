@@ -1,7 +1,7 @@
 let map;
 var mapData;
 var proj4 = window.proj4;
-var HOME_PATH = 'https://seoulshelter.info';
+var HOME_PATH = 'https://flood.city';
 let shelterMarkers1 = [];
 let shelterMarkers2 = [];
 let polygons = [];
@@ -19,7 +19,7 @@ async function fetchRainfallData() {
   const requests = districts.map(async district => {
       const encodedDistrict = encodeURIComponent(district);
       const apiUrl = `http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/ListRainfallService/1/5/${encodedDistrict}`;
-      const proxyUrl = `https://proxy.seoulshelter.info/${apiUrl}`;
+      const proxyUrl = `https://proxy.flood.city/${apiUrl}`;
       const response = await fetch(proxyUrl);
       const text = await response.text();
       const parser = new DOMParser();
@@ -329,7 +329,7 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
 });
 
 async function getCoordinatesFromXY(url) {
-  const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
+  const proxyUrl = `https://proxy.flood.city/${url}`;
   const response = await fetch(proxyUrl, {
     headers: {
       'origin': window.location.origin,
@@ -358,7 +358,7 @@ async function getCoordinatesFromXY(url) {
 }
 
 async function getCoordinatesFromAddress(url) {
-  const proxyUrl = `https://proxy.seoulshelter.info/${url}`;
+  const proxyUrl = `https://proxy.flood.city/${url}`;
   const response = await fetch(proxyUrl, {
     headers: {
       'origin': window.location.origin,
