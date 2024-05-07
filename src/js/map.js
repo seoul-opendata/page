@@ -156,6 +156,10 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
     polygons.forEach(function(polygon) {
       polygon.setVisible(true);
     });
+
+    //미터 보이기
+    let element = document.querySelector('.flex');
+    element.style.display = 'block';
   });
 });
 async function showShelters(map, urls, isAddress) {
@@ -221,6 +225,9 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
 
+    // 미터 숨기기
+    let element = document.querySelector('.flex');
+    element.style.display = 'none';
     // 폴리곤 숨기기
     polygons.forEach(function(polygon) {
       polygon.setVisible(false);
@@ -267,6 +274,10 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
   element.addEventListener('click', async function(e) {
     e.preventDefault();
 
+    // 미터 숨기기
+    let element = document.querySelector('.flex');
+    element.style.display = 'none';
+    
     // 폴리곤 숨기기
     polygons.forEach(function(polygon) {
       polygon.setVisible(false);
