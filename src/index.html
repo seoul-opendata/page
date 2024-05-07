@@ -64,7 +64,7 @@
             </div>
           </div>
           <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button id="guide-button" type="button" class="material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:outline-none pr-2">
+            <button id="help" type="button" class="material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:outline-none pr-2">
               <span class="material-icons">&#xe887;</span> 
             </button>
             <div type="button" class="material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:outline-none">
@@ -104,36 +104,36 @@
         <h3 class="font-semibold text-xl">잠시만 기다려주세요</h3>
       </div>
     </div>
-    <div id="myModal" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 hidden">
-      <div class="bg-white rounded shadow-lg w-1/2 h-1/2 border-black border-2 absolute z-30 backdrop-blur-3xl bg-zinc-200/20 dark:bg-zinc-700/20 text-zinc-950 dark:text-zinc-50 rounded-2xl max-w-80 w-11/12 max-h-96 h-2/3 right-5 mt-5 p-5 overflow-hidden">
-        <div class="border-b p-3 flex justify-between">
-          <h2 class="text-lg">도움말</h2>
-          <button id="close-button" class="material-symbols-outlined relative rounded-full text-zinc-950 dark:text-zinc-50 hover:text-zinc-800 dark:hover:text-zinc-200 focus:text-zinc-800 dark:focus:text-zinc-200 focus:outline-none">
-            <span>&#xf745;</span>
-          </button>
-        </div>
-        <div class="p-5">
-          <div class="flex justify-between mb-4">
-            <button class="tab-button" data-target="content1">침수위험도</button>
-            <button class="tab-button" data-target="content2">마커</button>
-            <button class="tab-button" data-target="content3">기타</button>
-          </div>
-          <div id="content1" class="tab-content">
-            열린데이터광장측에서 제공하는 10분 강우량을 기준으로 자치구마다 색깔을 표시합니다.<br>
-            강우량이 높아질수록 침수 위험도가 높아집니다.<br>
-            강우량 위험도는 1시간 기준으로 설명됩니다.
-          </div>
-          <div id="content2" class="tab-content hidden">
-            '임시거주시설'과 '수해대피소' 버튼을 누르면 해당 마커가 지도에 표시됩니다.<br>
-            '수해대피소'는 데이터 불안정으로 일부 시설 마커가 표시되지 않을 수 있습니다.<br>
-            오른쪽 밑 위치 아이콘을 누르면 지도 뷰를 내 위치로 이동하여 마커를 보여줍니다.
-          </div>
-          <div id="content3" class="tab-content hidden">
-            동영상 버튼을 누르면 재난시설 측에서 제공하는 침수피해에 대한 대응영상을 확인할 수 있습니다.<br>
-            알림버튼을 누르면 문자로 전송되는 서울 전체지역의 재난문자 알림을 확인할 수 있습니다.<br>
-            라이트모드-다크모드 전환이 가능합니다. 
-          </div>
-        </div>
+    <div id="info" class="hidden absolute z-30 backdrop-blur-3xl bg-zinc-200/20 dark:bg-zinc-700/20 text-zinc-950 dark:text-zinc-50 rounded-2xl max-w-80 w-11/12 max-h-96 h-2/3 right-5 mt-5 p-5 overflow-hidden">
+      <h2 class="font-bold text-center text-xl mb-4">도움말</h2>
+      <fieldset class="flex mb-4 justify-between">
+        <label class="has-[:checked]:!backdrop-brightness-50 has-[:checked]:dark:!backdrop-brightness-150 hover:backdrop-brightness-75 dark:hover:backdrop-brightness-125 rounded-xl w-20 block text-center py-2 font-semibold">
+          <input class="tab-button hidden" type="radio" name="tab" data-target="content1" checked>
+          <span>침수위험도</span>
+        </label>
+        <label class="has-[:checked]:!backdrop-brightness-50 has-[:checked]:dark:!backdrop-brightness-150 hover:backdrop-brightness-75 dark:hover:backdrop-brightness-125 rounded-xl w-20 block text-center py-2 font-semibold">
+          <input class="tab-button hidden" type="radio" name="tab" data-target="content2">
+          <span>마커</span>
+        </label>
+        <label class="has-[:checked]:!backdrop-brightness-50 has-[:checked]:dark:!backdrop-brightness-150 hover:backdrop-brightness-75 dark:hover:backdrop-brightness-125 rounded-xl w-20 block text-center py-2 font-semibold">
+          <input class="tab-button hidden" type="radio" name="tab" data-target="content3">
+          <span>기타</span>
+        </label>
+      </fieldset>
+      <div id="content1" class="tab-content">
+        열린데이터광장측에서 제공하는 10분 강우량을 기준으로 자치구마다 색깔을 표시합니다.<br>
+        강우량이 높아질수록 침수 위험도가 높아집니다.<br>
+        강우량 위험도는 1시간 기준으로 설명됩니다.
+      </div>
+      <div id="content2" class="tab-content hidden">
+        '임시거주시설'과 '수해대피소' 버튼을 누르면 해당 마커가 지도에 표시됩니다.<br>
+        '수해대피소'는 데이터 불안정으로 일부 시설 마커가 표시되지 않을 수 있습니다.<br>
+        오른쪽 밑 위치 아이콘을 누르면 지도 뷰를 내 위치로 이동하여 마커를 보여줍니다.
+      </div>
+      <div id="content3" class="tab-content hidden">
+        동영상 버튼을 누르면 재난시설 측에서 제공하는 침수피해에 대한 대응영상을 확인할 수 있습니다.<br>
+        알림버튼을 누르면 문자로 전송되는 서울 전체지역의 재난문자 알림을 확인할 수 있습니다.<br>
+        라이트모드-다크모드 전환이 가능합니다. 
       </div>
     </div>
     <div id="CBS" class="hidden absolute z-30 backdrop-blur-3xl bg-zinc-200/20 dark:bg-zinc-700/20 text-zinc-950 dark:text-zinc-50 rounded-2xl max-w-80 w-11/12 max-h-96 h-2/3 right-5 mt-5 p-5 overflow-hidden">

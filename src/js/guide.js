@@ -1,10 +1,10 @@
-document.getElementById('guide-button').addEventListener('click', function() {
-    document.getElementById('myModal').classList.remove('hidden');
-});
-
-document.getElementById('close-button').addEventListener('click', function() {
-    document.getElementById('myModal').classList.add('hidden');
-});
+document.addEventListener("DOMContentLoaded", function () {
+    const button = document.getElementById("help");
+    const menu = document.getElementById("info");
+    button.addEventListener("click", function () {
+      menu.classList.toggle("hidden");
+    });
+  });
 
 document.querySelectorAll('.tab-button').forEach(function(tabButton) {
     tabButton.addEventListener('click', function() {
