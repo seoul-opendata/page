@@ -159,47 +159,39 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
 
     //미터 보이기
     let element = document.querySelector('#meter-flood');
-    element.style.display = 'block';
+    element.style.display = 'flex';
   });
 });
-async function showShelters(map, urls, isAddress, markerKey) {
-  // Show loading popup
+async function showShelters(map, urls, isAddress) {
+  // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'flex';
 
-  let coordinates = [];
-  // Get marker data from local storage
-  const storedMarkers = JSON.parse(localStorage.getItem(markerKey));
-
-  if (storedMarkers) {
-    coordinates = [...storedMarkers];
-  } else {
-    for (const url of urls) {
-      const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
-      coordinates.push(...urlCoordinates);
-    }
+  const coordinates = [];
+  for (const url of urls) {
+    const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
+    coordinates.push(...urlCoordinates);
   }
 
   const markers = coordinates.map(coordinate => {
     const marker = new naver.maps.Marker({
       map: map,
       icon: {
-          content: [ '<span class="map_marker"></span>' ].join(''),
+          content: [
+                      '<span class="map_marker"></span>'
+                  ].join(''),
           size: new naver.maps.Size(20, 20),
           anchor: new naver.maps.Point(10, 10),
       },
       position: coordinate
     });
-    marker.setMap(map); // The marker is visible as soon as it is created
+    marker.setMap(map); // 마커를 생성하자마자 보입니다.
     return marker;
   });
 
-  // Hide loading popup
+  // 로딩 팝업을 숨깁니다.
   document.getElementById('loading-popup').style.display = 'none';
 
-  // Save the positions of shelterMarkers1 and shelterMarkers2 in cache
-  localStorage.setItem(markerKey, JSON.stringify(markers.map(marker => marker.getPosition())));
-
-  // Return the array of markers
+  // 마커 배열을 반환합니다.
   return markers;
 }
 // 클러스터 마커 아이콘을 정의합니다.
@@ -257,9 +249,6 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
       ];
       shelterMarkers1 = await showShelters(map, urls, false);
-
-      // 마커를 로컬 스토리지에 저장
-      localStorage.setItem('shelterMarkers1', JSON.stringify(shelterMarkers1));
     }
 
     shelterMarkers1.forEach(marker => marker.setVisible(true));
@@ -328,8 +317,6 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
         marker.setMap(map); // 마커를 생성하자마자 보입니다.
         shelterMarkers2.push(marker);
       }
-      // 마커를 로컬 스토리지에 저장
-      localStorage.setItem('shelterMarkers2', JSON.stringify(shelterMarkers2));
     }
 
     shelterMarkers2.forEach(marker => marker.setVisible(true));
