@@ -166,10 +166,18 @@ async function showShelters(map, urls, isAddress) {
   // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'flex';
 
-  const coordinates = [];
-  for (const url of urls) {
-    const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
-    coordinates.push(...urlCoordinates);
+  let coordinates = [];
+  // 로컬 스토리지에서 마커 데이터를 가져옵니다.
+  const storedMarkers1 = JSON.parse(localStorage.getItem('shelterMarkers1'));
+  const storedMarkers2 = JSON.parse(localStorage.getItem('shelterMarkers2'));
+
+  if (storedMarkers1 && storedMarkers2) {
+    coordinates = [...storedMarkers1, ...storedMarkers2];
+  } else {
+    for (const url of urls) {
+      const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
+      coordinates.push(...urlCoordinates);
+    }
   }
 
   const markers = coordinates.map(coordinate => {
@@ -249,6 +257,9 @@ document.querySelectorAll('.shelter-button-1').forEach((element) => {
         'http://openapi.seoul.go.kr:8088/6753785770686f6a37374d596d6e6d/xml/TbGtnVictP/1001/2000'
       ];
       shelterMarkers1 = await showShelters(map, urls, false);
+
+      // 마커를 로컬 스토리지에 저장
+      localStorage.setItem('shelterMarkers1', JSON.stringify(shelterMarkers1));
     }
 
     shelterMarkers1.forEach(marker => marker.setVisible(true));
@@ -317,6 +328,8 @@ document.querySelectorAll('.shelter-button-2').forEach((element) => {
         marker.setMap(map); // 마커를 생성하자마자 보입니다.
         shelterMarkers2.push(marker);
       }
+      // 마커를 로컬 스토리지에 저장
+      localStorage.setItem('shelterMarkers2', JSON.stringify(shelterMarkers2));
     }
 
     shelterMarkers2.forEach(marker => marker.setVisible(true));
