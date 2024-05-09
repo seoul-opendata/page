@@ -199,6 +199,10 @@ async function showShelters(map, urls, isAddress) {
   // 로딩 팝업을 숨깁니다.
   document.getElementById('loading-popup').style.display = 'none';
 
+  // shelterMarkers1과 shelterMarkers2의 위치를 캐시에 저장
+  localStorage.setItem('shelterMarkers1', JSON.stringify(shelterMarkers1.map(marker => marker.getPosition())));
+  localStorage.setItem('shelterMarkers2', JSON.stringify(shelterMarkers2.map(marker => marker.getPosition())));
+
   // 마커 배열을 반환합니다.
   return markers;
 }
