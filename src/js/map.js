@@ -166,10 +166,18 @@ async function showShelters(map, urls, isAddress) {
   // 로딩 팝업을 보여줍니다.
   document.getElementById('loading-popup').style.display = 'flex';
 
-  const coordinates = [];
-  for (const url of urls) {
-    const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
-    coordinates.push(...urlCoordinates);
+  let coordinates = [];
+  // 로컬 스토리지에서 마커 데이터를 가져옵니다.
+  const storedMarkers1 = JSON.parse(localStorage.getItem('shelterMarkers1'));
+  const storedMarkers2 = JSON.parse(localStorage.getItem('shelterMarkers2'));
+
+  if (storedMarkers1 && storedMarkers2) {
+    coordinates = [...storedMarkers1, ...storedMarkers2];
+  } else {
+    for (const url of urls) {
+      const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
+      coordinates.push(...urlCoordinates);
+    }
   }
 
   const markers = coordinates.map(coordinate => {
@@ -190,6 +198,10 @@ async function showShelters(map, urls, isAddress) {
 
   // 로딩 팝업을 숨깁니다.
   document.getElementById('loading-popup').style.display = 'none';
+
+  // shelterMarkers1과 shelterMarkers2의 위치를 캐시에 저장
+  localStorage.setItem('shelterMarkers1', JSON.stringify(shelterMarkers1.map(marker => marker.getPosition())));
+  localStorage.setItem('shelterMarkers2', JSON.stringify(shelterMarkers2.map(marker => marker.getPosition())));
 
   // 마커 배열을 반환합니다.
   return markers;
