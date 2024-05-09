@@ -162,17 +162,16 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
     element.style.display = 'flex';
   });
 });
-async function showShelters(map, urls, isAddress) {
-  // 로딩 팝업을 보여줍니다.
+async function showShelters(map, urls, isAddress, markerKey) {
+  // Show loading popup
   document.getElementById('loading-popup').style.display = 'flex';
 
   let coordinates = [];
-  // 로컬 스토리지에서 마커 데이터를 가져옵니다.
-  const storedMarkers1 = JSON.parse(localStorage.getItem('shelterMarkers1'));
-  const storedMarkers2 = JSON.parse(localStorage.getItem('shelterMarkers2'));
+  // Get marker data from local storage
+  const storedMarkers = JSON.parse(localStorage.getItem(markerKey));
 
-  if (storedMarkers1 && storedMarkers2) {
-    coordinates = [...storedMarkers1, ...storedMarkers2];
+  if (storedMarkers) {
+    coordinates = [...storedMarkers];
   } else {
     for (const url of urls) {
       const urlCoordinates = isAddress ? await getCoordinatesFromAddress(url) : await getCoordinatesFromXY(url);
@@ -184,26 +183,23 @@ async function showShelters(map, urls, isAddress) {
     const marker = new naver.maps.Marker({
       map: map,
       icon: {
-          content: [
-                      '<span class="map_marker"></span>'
-                  ].join(''),
+          content: [ '<span class="map_marker"></span>' ].join(''),
           size: new naver.maps.Size(20, 20),
           anchor: new naver.maps.Point(10, 10),
       },
       position: coordinate
     });
-    marker.setMap(map); // 마커를 생성하자마자 보입니다.
+    marker.setMap(map); // The marker is visible as soon as it is created
     return marker;
   });
 
-  // 로딩 팝업을 숨깁니다.
+  // Hide loading popup
   document.getElementById('loading-popup').style.display = 'none';
 
-  // shelterMarkers1과 shelterMarkers2의 위치를 캐시에 저장
-  localStorage.setItem('shelterMarkers1', JSON.stringify(shelterMarkers1.map(marker => marker.getPosition())));
-  localStorage.setItem('shelterMarkers2', JSON.stringify(shelterMarkers2.map(marker => marker.getPosition())));
+  // Save the positions of shelterMarkers1 and shelterMarkers2 in cache
+  localStorage.setItem(markerKey, JSON.stringify(markers.map(marker => marker.getPosition())));
 
-  // 마커 배열을 반환합니다.
+  // Return the array of markers
   return markers;
 }
 // 클러스터 마커 아이콘을 정의합니다.
