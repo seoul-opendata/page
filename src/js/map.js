@@ -159,7 +159,7 @@ document.querySelectorAll('.flood-risk-button').forEach((element) => {
 
     //미터 보이기
     let element = document.querySelector('#meter-flood');
-    element.style.display = 'flex';
+    element.style.display = 'block';
   });
 });
 async function showShelters(map, urls, isAddress, markerKey) {
